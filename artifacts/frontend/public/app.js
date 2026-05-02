@@ -148,7 +148,6 @@
   }
 
   function getBaseUrl() {
-    // Works in both dev (root) and deployed environments
     return window.location.origin;
   }
 
@@ -211,7 +210,6 @@
         return;
       }
 
-      // Basic client-side format check
       const cleaned = raw.replace(/^https?:\/\//, '');
       if (!cleaned.startsWith('github.com/')) {
         showInputError('url must start with github.com/owner/repo');
@@ -239,42 +237,13 @@
     el.textContent = str || '';
   }
 
-  // Create a finding row DOM node (never innerHTML for user data)
-  function createFindingEl(finding) {
-    const row = document.createElement('div');
-    row.className = 'finding';
-
-    const margin = document.createElement('div');
-    margin.className = 'finding-margin';
-    setText(margin, finding.category);
-    row.appendChild(margin);
-
-    const body = document.createElement('div');
-    body.className = 'finding-body';
-
-    const claim = document.createElement('p');
-    claim.className = 'finding-claim';
-    setText(claim, finding.claimText);
-    body.appendChild(claim);
-
-    if (finding.verbatimQuote && finding.verbatimQuote !== finding.claimText) {
-      const quote = document.createElement('div');
-      quote.className = 'finding-quote';
-      setText(quote, '"' + finding.verbatimQuote + '"');
-      body.appendChild(quote);
-    }
-
-    if (finding.evidence) {
-      const evidence = document.createElement('p');
-      evidence.className = 'finding-evidence';
-      // evidence may contain backtick-wrapped code; render safely
-      renderEvidenceText(evidence, finding.evidence);
-      body.appendChild(evidence);
-    }
-
-    row.appendChild(body);
-    return row;
-  }
+  // Bucket metadata: symbol, verb phrase for CODE column
+  var BUCKET_META = {
+    verified:     { symbol: '●', verb: 'the code confirms:' },
+    unverifiable: { symbol: '○', verb: 'the code cannot confirm —' },
+    missing:      { symbol: '▲', verb: 'the code does not show:' },
+    contradicted: { symbol: '✕', verb: 'the code contradicts:' },
+  };
 
   // Render evidence text: wrap `code` spans safely (no innerHTML with user data)
   function renderEvidenceText(container, evidenceStr) {
@@ -290,7 +259,80 @@
     }
   }
 
-  function renderBucket(bucketId, itemsId, countId, findings) {
+  // CHANGE 3: Two-column sentence-form finding (README | divider | CODE)
+  function createFindingEl(finding, bucket) {
+    const meta = BUCKET_META[bucket] || { symbol: '·', verb: 'the code:' };
+
+    const row = document.createElement('div');
+    row.className = 'finding';
+
+    // ── README column ──────────────────────────────────────────
+    const readmeCol = document.createElement('div');
+    readmeCol.className = 'finding-readme';
+
+    const readmeLabel = document.createElement('span');
+    readmeLabel.className = 'finding-col-label';
+    setText(readmeLabel, 'README');
+    readmeCol.appendChild(readmeLabel);
+
+    const readmeBody = document.createElement('p');
+    readmeBody.className = 'finding-readme-body';
+
+    const leadSpan = document.createElement('span');
+    leadSpan.className = 'finding-lead';
+    setText(leadSpan, 'the readme claims ');
+    readmeBody.appendChild(leadSpan);
+
+    const quoteSpan = document.createElement('span');
+    quoteSpan.className = 'finding-quote-span';
+    const quoteText = finding.verbatimQuote || finding.claimText || '';
+    setText(quoteSpan, '\u201C' + quoteText + '\u201D');
+    readmeBody.appendChild(quoteSpan);
+
+    readmeCol.appendChild(readmeBody);
+    row.appendChild(readmeCol);
+
+    // ── Center divider with bucket symbol ──────────────────────
+    const divider = document.createElement('div');
+    divider.className = 'finding-divider';
+
+    const symbolEl = document.createElement('span');
+    symbolEl.className = 'finding-symbol ' + bucket + '-symbol';
+    setText(symbolEl, meta.symbol);
+    divider.appendChild(symbolEl);
+
+    row.appendChild(divider);
+
+    // ── CODE column ────────────────────────────────────────────
+    const codeCol = document.createElement('div');
+    codeCol.className = 'finding-code';
+
+    const codeLabel = document.createElement('span');
+    codeLabel.className = 'finding-col-label';
+    setText(codeLabel, 'CODE');
+    codeCol.appendChild(codeLabel);
+
+    const codeBody = document.createElement('p');
+    codeBody.className = 'finding-code-body';
+    codeBody.appendChild(text(meta.verb + ' '));
+    if (finding.evidence) {
+      renderEvidenceText(codeBody, finding.evidence);
+    }
+    codeCol.appendChild(codeBody);
+
+    // Category tag — bottom-right
+    if (finding.category) {
+      const catTag = document.createElement('span');
+      catTag.className = 'finding-category';
+      setText(catTag, finding.category);
+      codeCol.appendChild(catTag);
+    }
+
+    row.appendChild(codeCol);
+    return row;
+  }
+
+  function renderBucket(bucketId, itemsId, countId, findings, bucket) {
     const countEl = document.getElementById(countId);
     const itemsEl = document.getElementById(itemsId);
 
@@ -308,7 +350,7 @@
       itemsEl.appendChild(empty);
     } else {
       for (const finding of findings) {
-        itemsEl.appendChild(createFindingEl(finding));
+        itemsEl.appendChild(createFindingEl(finding, bucket));
       }
     }
   }
@@ -342,10 +384,10 @@
       }
     }
 
-    renderBucket('bucket-verified', 'items-verified', 'count-verified', data.verified || []);
-    renderBucket('bucket-unverifiable', 'items-unverifiable', 'count-unverifiable', data.unverifiable || []);
-    renderBucket('bucket-missing', 'items-missing', 'count-missing', data.missing || []);
-    renderBucket('bucket-contradicted', 'items-contradicted', 'count-contradicted', data.contradicted || []);
+    renderBucket('bucket-verified',     'items-verified',     'count-verified',     data.verified     || [], 'verified');
+    renderBucket('bucket-unverifiable', 'items-unverifiable', 'count-unverifiable', data.unverifiable || [], 'unverifiable');
+    renderBucket('bucket-missing',      'items-missing',      'count-missing',      data.missing      || [], 'missing');
+    renderBucket('bucket-contradicted', 'items-contradicted', 'count-contradicted', data.contradicted || [], 'contradicted');
 
     // Stats bar counts
     var statIds = ['verified', 'unverifiable', 'missing', 'contradicted'];
@@ -359,18 +401,18 @@
     const repo = (data.meta && data.meta.repo) || '';
     if (owner && repo) updateMetaForRepo(owner, repo);
 
-    // Wire up "scan this repo" button with the current repo URL
+    // Wire up "scan this repo" button
     const scanThisBtn = document.getElementById('scan-this-repo-btn');
     if (scanThisBtn) {
-      const owner = (data.meta && data.meta.owner) || '';
-      const repo = (data.meta && data.meta.repo) || '';
-      if (owner && repo) {
-        setText(scanThisBtn, 'scan ' + owner + '/' + repo + ' ↗');
+      const o = (data.meta && data.meta.owner) || '';
+      const r = (data.meta && data.meta.repo) || '';
+      if (o && r) {
+        setText(scanThisBtn, 'scan ' + o + '/' + r + ' ↗');
         scanThisBtn.style.display = '';
         const newBtn = scanThisBtn.cloneNode(true);
         scanThisBtn.parentNode.replaceChild(newBtn, scanThisBtn);
         newBtn.addEventListener('click', function () {
-          submitScan('https://github.com/' + owner + '/' + repo);
+          submitScan('https://github.com/' + o + '/' + r);
         });
       } else {
         scanThisBtn.style.display = 'none';
