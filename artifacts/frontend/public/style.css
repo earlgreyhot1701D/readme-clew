@@ -261,7 +261,13 @@ body {
 .hero-lead {
   display: flex;
   flex-direction: column;
-  gap: var(--lg);
+  gap: var(--md);
+}
+
+.form-footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sm);
 }
 
 .wordmark-block { margin-bottom: var(--xs); }
@@ -461,7 +467,7 @@ body {
    ============================================================ */
 
 .example-cards {
-  margin: var(--2xl) 0 var(--xl);
+  margin: var(--lg) 0 var(--md);
 }
 
 .example-cards-label {
@@ -516,9 +522,9 @@ body {
 
 .example-card-readme {
   font-family: 'EB Garamond', serif;
-  font-size: 0.95rem;
+  font-size: 1.08rem;
   line-height: 1.5;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .example-card-lead {
@@ -532,7 +538,7 @@ body {
 
 .example-card-code {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.69rem;
+  font-size: 0.78rem;
   line-height: 1.65;
   color: var(--ink-soft);
 }
@@ -548,9 +554,9 @@ body {
 
 .example-card-file {
   display: inline-block;
-  margin-top: 5px;
+  margin-top: 6px;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.64rem;
+  font-size: 0.72rem;
   color: var(--ink-faded);
   border-bottom: 1px solid var(--rule-gold);
   letter-spacing: 0.03em;
