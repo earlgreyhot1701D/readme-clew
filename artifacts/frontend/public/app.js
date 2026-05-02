@@ -152,6 +152,55 @@
     }
   }
 
+  // ============================================================
+  // Recent repos (localStorage)
+  // ============================================================
+
+  var RECENT_KEY = 'readme-clew-recent';
+  var RECENT_MAX = 8;
+
+  function saveRecentRepo(repoUrl) {
+    try {
+      var existing = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
+      var filtered = existing.filter(function (u) { return u !== repoUrl; });
+      filtered.unshift(repoUrl);
+      localStorage.setItem(RECENT_KEY, JSON.stringify(filtered.slice(0, RECENT_MAX)));
+      renderRecentRepos();
+    } catch (e) {}
+  }
+
+  function getRecentRepos() {
+    try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); }
+    catch (e) { return []; }
+  }
+
+  function renderRecentRepos() {
+    var container = document.getElementById('recent-repos');
+    if (!container) return;
+    var repos = getRecentRepos();
+    if (repos.length === 0) { container.style.display = 'none'; return; }
+    container.style.display = '';
+    container.innerHTML = '';
+    var label = document.createElement('span');
+    label.className = 'recent-label';
+    label.textContent = 'recent:';
+    container.appendChild(label);
+    for (var i = 0; i < repos.length; i++) {
+      (function (url) {
+        var chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'recent-chip';
+        chip.textContent = url.replace(/^https?:\/\/github\.com\//, '');
+        chip.addEventListener('click', function () {
+          var inp = document.getElementById('repo-url');
+          if (inp) inp.value = url;
+          submitScan(url);
+        });
+        container.appendChild(chip);
+      })(repos[i]);
+    }
+  }
+
   function getBaseUrl() {
     return window.location.origin;
   }
@@ -181,6 +230,7 @@
       stopLoadingMessages();
       setRepoParam(repoUrl);
       renderResults(repoUrl, data);
+      saveRecentRepo(repoUrl);
       showState('results');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
@@ -574,6 +624,102 @@
         }
       });
     }
+
+    // Wire up export JSON button
+    const exportJsonBtn = document.getElementById('export-json-btn');
+    if (exportJsonBtn) {
+      const newJsonBtn = exportJsonBtn.cloneNode(true);
+      exportJsonBtn.parentNode.replaceChild(newJsonBtn, exportJsonBtn);
+      newJsonBtn.addEventListener('click', function () {
+        const o = (data.meta && data.meta.owner) || 'unknown';
+        const r = (data.meta && data.meta.repo)  || 'repo';
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const dlUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = dlUrl;
+        a.download = 'readme-clew-' + o + '-' + r + '.json';
+        a.click();
+        URL.revokeObjectURL(dlUrl);
+      });
+    }
+
+    // Wire up export Markdown button
+    const exportMdBtn = document.getElementById('export-md-btn');
+    if (exportMdBtn) {
+      const newMdBtn = exportMdBtn.cloneNode(true);
+      exportMdBtn.parentNode.replaceChild(newMdBtn, exportMdBtn);
+      newMdBtn.addEventListener('click', function () {
+        const o = (data.meta && data.meta.owner) || 'unknown';
+        const r = (data.meta && data.meta.repo)  || 'repo';
+        const v = (data.verified     || []).length;
+        const u = (data.unverifiable || []).length;
+        const m = (data.missing      || []).length;
+        const c = (data.contradicted || []).length;
+        const date = new Date().toISOString().slice(0, 10);
+        const lines = [];
+        lines.push('# readme clew \u2014 ' + o + '/' + r);
+        lines.push('');
+        if (data.notes && data.notes.read) {
+          lines.push('> ' + data.notes.read);
+          lines.push('');
+        }
+        lines.push('**Scanned:** ' + date + ' \u00b7 **Claims extracted:** ' + (v + u + m + c));
+        lines.push('');
+        lines.push('| | Count |');
+        lines.push('|---|---|');
+        lines.push('| \u25cf Verified | ' + v + ' |');
+        lines.push('| \u25cb Unverifiable | ' + u + ' |');
+        lines.push('| \u25b2 Missing | ' + m + ' |');
+        lines.push('| \u2715 Contradicted | ' + c + ' |');
+        lines.push('');
+        var bkts = [
+          { key: 'verified',     label: '\u25cf Verified' },
+          { key: 'unverifiable', label: '\u25cb Unverifiable' },
+          { key: 'missing',      label: '\u25b2 Missing' },
+          { key: 'contradicted', label: '\u2715 Contradicted' },
+        ];
+        for (var bi = 0; bi < bkts.length; bi++) {
+          var bkt = bkts[bi];
+          var items = data[bkt.key] || [];
+          lines.push('---');
+          lines.push('');
+          lines.push('## ' + bkt.label + ' (' + items.length + ')');
+          lines.push('');
+          var ctx = data.notes && data.notes.bucketContext && data.notes.bucketContext[bkt.key];
+          if (ctx) { lines.push('*' + ctx + '*'); lines.push(''); }
+          if (items.length === 0) {
+            lines.push('*No ' + bkt.key + ' claims.*');
+          } else {
+            for (var fi = 0; fi < items.length; fi++) {
+              var f = items[fi];
+              lines.push('**' + (f.claimText || '') + '** `[' + (f.category || '') + ']`');
+              if (f.evidence) lines.push('> ' + f.evidence);
+              lines.push('');
+            }
+          }
+          lines.push('');
+        }
+        lines.push('---');
+        lines.push('');
+        lines.push('*Generated by [readme clew](' + window.location.origin + ') \u2014 audit your own receipts*');
+        const md = lines.join('\n');
+        const blob = new Blob([md], { type: 'text/markdown' });
+        const dlUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = dlUrl;
+        a.download = 'readme-clew-' + o + '-' + r + '.md';
+        a.click();
+        URL.revokeObjectURL(dlUrl);
+      });
+    }
+
+    // Wire up print / save as PDF button
+    const printBtn = document.getElementById('print-btn');
+    if (printBtn) {
+      const newPrintBtn = printBtn.cloneNode(true);
+      printBtn.parentNode.replaceChild(newPrintBtn, printBtn);
+      newPrintBtn.addEventListener('click', function () { window.print(); });
+    }
   }
 
   // ============================================================
@@ -605,6 +751,7 @@
     showState('landing');
     initForm();
     initScanAgain();
+    renderRecentRepos();
 
     const repoParam = getRepoParam();
     if (repoParam) {
