@@ -1003,6 +1003,52 @@ body {
 }
 
 /* ============================================================
+   Badge section
+   ============================================================ */
+
+.badge-section {
+  border-top: 1px solid var(--rule-gold);
+  padding: var(--xl) 0 var(--2xl);
+  text-align: center;
+}
+
+.badge-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-faded);
+  margin-bottom: var(--md);
+}
+
+.badge-preview-img {
+  display: block;
+  margin: 0 auto var(--md);
+  height: 20px;
+  image-rendering: crisp-edges;
+}
+
+.badge-copy-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--md);
+  flex-wrap: wrap;
+}
+
+.badge-code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+  background: var(--paper-inset);
+  padding: 6px 10px;
+  border: 1px solid var(--rule);
+  word-break: break-all;
+  text-align: left;
+  max-width: 420px;
+}
+
+/* ============================================================
    Print / Save as PDF
    ============================================================ */
 
