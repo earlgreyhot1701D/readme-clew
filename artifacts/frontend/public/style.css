@@ -1,5 +1,5 @@
 /* ============================================================
-   README CLEW — Design system
+   README CLEW — Design system v1.5
    ============================================================ */
 
 :root {
@@ -23,7 +23,6 @@
   --blue:         #1A3380;
   --blue-mid:     #2244A0;
   --blue-deep:    #101F55;
-  --blue-ghost:   rgba(26, 51, 128, 0.06);
 
   /* Buckets */
   --teal:         #00787D;
@@ -40,7 +39,7 @@
   --rule-gold:    rgba(184, 135, 44, 0.30);
   --border:       rgba(24, 24, 15, 0.18);
 
-  /* Spacing */
+  /* Spacing — 8px baseline */
   --xs:  4px;
   --sm:  8px;
   --md:  16px;
@@ -66,8 +65,15 @@ html {
   scroll-behavior: smooth;
 }
 
+/* ============================================================
+   CHANGE 2 — Faint blue circuit texture
+   Single-color SVG pattern at ~5% opacity; ink-on-paper WCAG AA unaffected.
+   ============================================================ */
+
 body {
-  background: var(--paper);
+  background-color: var(--paper);
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTTAgMjAgSDIwIFYwIiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjYsNTEsMTI4LC4wNSkiIHN0cm9rZS13aWR0aD0iLjc1Ii8+PHBhdGggZD0iTTYwIDQwIEg0MCBWNjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNiw1MSwxMjgsLjA1KSIgc3Ryb2tlLXdpZHRoPSIuNzUiLz48bGluZSB4MT0iMjAiIHkxPSIyMCIgeDI9IjQwIiB5Mj0iMjAiIHN0cm9rZT0icmdiYSgyNiw1MSwxMjgsLjA1KSIgc3Ryb2tlLXdpZHRoPSIuNzUiLz48bGluZSB4MT0iNDAiIHkxPSIyMCIgeDI9IjQwIiB5Mj0iNDAiIHN0cm9rZT0icmdiYSgyNiw1MSwxMjgsLjA1KSIgc3Ryb2tlLXdpZHRoPSIuNzUiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIyIiBmaWxsPSJyZ2JhKDI2LDUxLDEyOCwuMDYpIi8+PGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMiIgZmlsbD0icmdiYSgyNiw1MSwxMjgsLjA2KSIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iMjAiIHI9IjEuNSIgZmlsbD0icmdiYSgyNiw1MSwxMjgsLjA2KSIvPjxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIxIiBmaWxsPSJyZ2JhKDI2LDUxLDEyOCwuMDQpIi8+PGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iMSIgZmlsbD0icmdiYSgyNiw1MSwxMjgsLjA0KSIvPjwvc3ZnPg==");
+  background-size: 60px 60px;
   color: var(--ink);
   font-family: 'Inter', system-ui, sans-serif;
   font-weight: 400;
@@ -83,12 +89,78 @@ body {
   max-width: 1080px;
   margin: 0 auto;
   padding: 0 var(--lg);
+  position: relative;
+  background: var(--paper);
 }
 
 @media (min-width: 700px) {
   #app {
     padding: 0 var(--2xl);
+    /* 12px all-around so the outer outline rule never clips the viewport edge */
+    margin: 12px;
   }
+}
+
+@media (min-width: 1128px) {
+  #app {
+    margin: 12px auto;
+    max-width: 1080px;
+  }
+}
+
+/* ============================================================
+   CHANGE 1 — Page border chrome (desktop only)
+   Inner hairline (border) + 8px gap + outer hairline (outline).
+   Corner fleurons via ::before / ::after on #app and .page-frame.
+   ============================================================ */
+
+@media (min-width: 700px) {
+  #app {
+    border: 1px solid var(--rule-gold);
+    outline: 1px solid var(--rule-gold);
+    outline-offset: 8px;
+  }
+
+  /* ❦ at top-left and bottom-right */
+  #app::before,
+  #app::after {
+    position: absolute;
+    font-family: 'EB Garamond', serif;
+    font-size: 0.88rem;
+    color: var(--gold);
+    line-height: 1;
+    background: var(--paper);
+    padding: 0 3px;
+    z-index: 2;
+  }
+  #app::before { content: '❦'; top: -0.58em; left: -0.58em; }
+  #app::after  { content: '❦'; bottom: -0.58em; right: -0.58em; }
+
+  /* ❧ at top-right and bottom-left via .page-frame pseudo-elements */
+  .page-frame {
+    display: block;
+    position: absolute;
+    inset: -1px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .page-frame::before,
+  .page-frame::after {
+    position: absolute;
+    font-family: 'EB Garamond', serif;
+    font-size: 0.88rem;
+    color: var(--gold);
+    line-height: 1;
+    background: var(--paper);
+    padding: 0 3px;
+  }
+  .page-frame::before { content: '❧'; top: -0.58em; right: -0.58em; }
+  .page-frame::after  { content: '❧'; bottom: -0.58em; left: -0.58em; }
+}
+
+@media (max-width: 699px) {
+  .page-frame { display: none; }
+  #app { border: 1px solid var(--rule-gold); }
 }
 
 /* ============================================================
@@ -113,7 +185,7 @@ body {
 .state.active { display: block; }
 
 /* ============================================================
-   WORDMARK — shared across all states
+   Wordmark — shared
    ============================================================ */
 
 .wordmark {
@@ -126,9 +198,7 @@ body {
   text-transform: lowercase;
 }
 
-.wordmark .dot {
-  color: var(--gold);
-}
+.wordmark .dot { color: var(--gold); }
 
 .wordmark--sm {
   font-size: 1.6rem;
@@ -136,7 +206,7 @@ body {
 }
 
 @media (min-width: 700px) {
-  .wordmark { font-size: 4.5rem; }
+  .wordmark     { font-size: 4.5rem; }
   .wordmark--sm { font-size: 1.75rem; }
 }
 
@@ -164,23 +234,19 @@ body {
   .landing-hero {
     grid-template-columns: 1fr 1fr;
     align-items: center;
-    min-height: 88vh;
     gap: var(--2xl);
     padding: var(--2xl) 0 var(--xl);
   }
 }
 
-/* Mobile: form first, then artwork */
 .hero-lead   { order: 1; }
 .hero-artwork { order: 2; }
 
-/* Desktop: artwork left, form right */
 @media (min-width: 700px) {
   .hero-artwork { order: 1; }
   .hero-lead    { order: 2; }
 }
 
-/* Artwork column */
 .hero-artwork {
   display: flex;
   align-items: center;
@@ -193,21 +259,17 @@ body {
   max-width: 460px;
   height: auto;
   border: 1px solid var(--rule-gold);
-  box-shadow: 0 8px 40px rgba(24, 24, 15, 0.12), 0 2px 8px rgba(24, 24, 15, 0.08);
+  box-shadow: 0 6px 32px rgba(24, 24, 15, 0.14), 0 2px 6px rgba(24, 24, 15, 0.08);
 }
 
-/* Lead column */
 .hero-lead {
   display: flex;
   flex-direction: column;
   gap: var(--lg);
 }
 
-.wordmark-block {
-  margin-bottom: var(--xs);
-}
+.wordmark-block { margin-bottom: var(--xs); }
 
-/* Lede */
 .lede {
   font-family: 'EB Garamond', Georgia, serif;
   font-size: 1.2rem;
@@ -223,7 +285,7 @@ body {
 }
 
 /* ============================================================
-   Scan form — prominent URL input
+   Scan form
    ============================================================ */
 
 .scan-form {
@@ -280,12 +342,6 @@ body {
 .scan-form input[type="url"]::placeholder {
   color: var(--ink-faded);
   opacity: 0.7;
-}
-
-.scan-form input[type="url"].error ~ .input-wrap,
-.input-wrap:has(input.error) {
-  border-color: var(--oxblood);
-  box-shadow: 0 0 0 3px rgba(139, 31, 63, 0.10);
 }
 
 .scan-form button {
@@ -366,10 +422,7 @@ body {
 }
 
 @media (max-width: 600px) {
-  .colophon {
-    grid-template-columns: 1fr;
-    gap: var(--xl);
-  }
+  .colophon { grid-template-columns: 1fr; gap: var(--xl); }
 }
 
 .colophon-header {
@@ -381,9 +434,7 @@ body {
   margin-bottom: var(--md);
 }
 
-.colophon-col:last-child .colophon-header {
-  color: var(--ink-faded);
-}
+.colophon-col:last-child .colophon-header { color: var(--ink-faded); }
 
 .colophon-col p {
   font-family: 'EB Garamond', serif;
@@ -392,12 +443,10 @@ body {
   color: var(--ink-soft);
 }
 
-.colophon-col p + p {
-  margin-top: 2px;
-}
+.colophon-col p + p { margin-top: 2px; }
 
 /* ============================================================
-   LOADING state
+   Loading state
    ============================================================ */
 
 .loading-page {
@@ -410,9 +459,7 @@ body {
   text-align: center;
 }
 
-.loading-wordmark {
-  opacity: 0.6;
-}
+.loading-wordmark { opacity: 0.6; }
 
 .loading-block {
   display: flex;
@@ -447,7 +494,7 @@ body {
 }
 
 /* ============================================================
-   RESULTS — top bar
+   Results — top bar
    ============================================================ */
 
 .results-topbar {
@@ -485,9 +532,7 @@ body {
 }
 
 @media (max-width: 480px) {
-  .stats-bar {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
 }
 
 .stat-item {
@@ -520,30 +565,31 @@ body {
   letter-spacing: 0.14em;
 }
 
-.stat-verified   .stat-count { color: var(--teal); }
+.stat-verified   .stat-count,
 .stat-verified   .stat-symbol,
 .stat-verified   .stat-label { color: var(--teal); }
 
-.stat-unverifiable .stat-count { color: var(--slate); }
+.stat-unverifiable .stat-count,
 .stat-unverifiable .stat-symbol,
 .stat-unverifiable .stat-label { color: var(--slate); }
 
-.stat-missing    .stat-count { color: var(--amber); }
+.stat-missing    .stat-count,
 .stat-missing    .stat-symbol,
 .stat-missing    .stat-label { color: var(--amber); }
 
-.stat-contradicted .stat-count { color: var(--oxblood); }
+.stat-contradicted .stat-count,
 .stat-contradicted .stat-symbol,
 .stat-contradicted .stat-label { color: var(--oxblood); }
 
 /* ============================================================
-   Bucket sections
+   CHANGE 4 — Ornamented bucket separators
+   Each bucket has a unique ornament character above its heading.
    ============================================================ */
 
 .bucket {
   margin-bottom: var(--lg);
-  border-left: 3px solid var(--rule);
   padding-left: var(--lg);
+  border-left: 3px solid var(--rule);
 }
 
 .bucket--verified   { border-color: var(--teal); }
@@ -551,6 +597,33 @@ body {
 .bucket--missing    { border-color: var(--amber); }
 .bucket--contradicted { border-color: var(--oxblood); }
 
+/* Ornamental separator row above each bucket heading */
+.bucket-sep {
+  display: flex;
+  align-items: center;
+  gap: var(--sm);
+  margin-bottom: var(--lg);
+  margin-top: var(--xl);
+}
+
+.bucket-sep-line {
+  flex: 1;
+  height: 1px;
+  background: var(--rule-gold);
+}
+
+.bucket-sep-char {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.bucket--verified   .bucket-sep-char { color: var(--teal); }
+.bucket--unverifiable .bucket-sep-char { color: var(--slate); }
+.bucket--missing    .bucket-sep-char { color: var(--amber); }
+.bucket--contradicted .bucket-sep-char { color: var(--oxblood); }
+
+/* Bucket heading */
 .bucket-heading {
   display: flex;
   align-items: baseline;
@@ -598,77 +671,165 @@ body {
 }
 
 /* ============================================================
-   Finding rows
+   CHANGE 3 — Sentence-form findings, two-column (README | CODE)
    ============================================================ */
 
 .finding {
   display: grid;
-  grid-template-columns: 130px 1fr;
-  gap: var(--lg);
+  grid-template-columns: 1fr 28px 1fr;
   padding: var(--md) 0;
   border-bottom: 1px solid var(--rule);
+  align-items: stretch;
+  gap: 0;
 }
 
 .finding:last-child { border-bottom: none; }
 
-@media (max-width: 540px) {
-  .finding {
-    grid-template-columns: 1fr;
-    gap: var(--xs);
-  }
-}
-
-.finding-margin {
+/* Column label (README / CODE) */
+.finding-col-label {
+  display: block;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.18em;
   color: var(--ink-faded);
-  text-align: right;
-  padding-top: 4px;
-  line-height: 1.4;
-}
-
-@media (max-width: 540px) {
-  .finding-margin { text-align: left; }
-}
-
-.finding-body { min-width: 0; }
-
-.finding-claim {
-  font-family: 'EB Garamond', serif;
-  font-size: 1.05rem;
-  color: var(--ink);
-  line-height: 1.55;
   margin-bottom: var(--xs);
 }
 
-.finding-quote {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.74rem;
+/* README column */
+.finding-readme {
+  padding-right: var(--md);
+}
+
+.finding-readme-body {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.05rem;
+  line-height: 1.6;
   color: var(--ink-soft);
-  background: var(--paper-warm);
-  padding: 4px var(--sm);
-  border-left: 2px solid var(--gold);
-  margin-bottom: var(--sm);
-  overflow-wrap: break-word;
-  word-break: break-all;
-  line-height: 1.5;
 }
 
-.finding-evidence {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.74rem;
+.finding-lead {
   color: var(--ink-faded);
-  overflow-wrap: break-word;
-  line-height: 1.55;
+  font-style: italic;
 }
 
-.finding-evidence code {
-  font-family: inherit;
+.finding-quote-span {
+  color: var(--ink);
+  font-style: normal;
+}
+
+/* Center divider: vertical hairline + symbol */
+.finding-divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+}
+
+.finding-divider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--rule-gold);
+  transform: translateX(-50%);
+}
+
+.finding-symbol {
+  position: relative;
+  z-index: 1;
+  background: var(--paper);
+  padding: 2px 1px;
+  font-size: 1.1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  line-height: 1;
+}
+
+/* CODE column */
+.finding-code {
+  padding-left: var(--md);
+  display: flex;
+  flex-direction: column;
+}
+
+.finding-code-body {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  flex: 1;
+}
+
+.finding-code-body code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.82em;
   background: var(--paper-warm);
   padding: 1px 5px;
-  border-radius: 2px;
+  color: var(--ink);
+  word-break: break-all;
+}
+
+/* Category tag — bottom-right of CODE column */
+.finding-category {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-faded);
+  text-align: right;
+  margin-top: var(--xs);
+  align-self: flex-end;
+}
+
+/* Mobile: single column, symbol at top-left, horizontal divider */
+@media (max-width: 699px) {
+  .finding {
+    display: block;
+    position: relative;
+    padding-left: 28px;
+  }
+
+  .finding-readme {
+    padding-right: 0;
+    margin-bottom: var(--sm);
+  }
+
+  .finding-divider {
+    height: 1px;
+    margin: var(--sm) 0;
+  }
+
+  .finding-divider::before {
+    top: 50%;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: 1px;
+    transform: none;
+  }
+
+  .finding-symbol {
+    position: absolute;
+    top: var(--md);
+    left: 0;
+    background: transparent;
+    padding: 0;
+  }
+
+  .finding-code {
+    padding-left: 0;
+    margin-top: var(--sm);
+  }
+
+  .finding-category {
+    text-align: left;
+    margin-top: var(--xs);
+  }
 }
 
 /* ============================================================
