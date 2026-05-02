@@ -419,6 +419,29 @@
       }
     }
 
+    // Wire up share on X button
+    const shareXBtn = document.getElementById('share-x-btn');
+    if (shareXBtn) {
+      const newShareBtn = shareXBtn.cloneNode(true);
+      shareXBtn.parentNode.replaceChild(newShareBtn, shareXBtn);
+      newShareBtn.addEventListener('click', function () {
+        const v = (data.verified     || []).length;
+        const u = (data.unverifiable || []).length;
+        const m = (data.missing      || []).length;
+        const c = (data.contradicted || []).length;
+        const o = (data.meta && data.meta.owner) || '';
+        const r = (data.meta && data.meta.repo)  || '';
+        const tweetText =
+          'readme clew scanned ' + o + '/' + r + ':\n' +
+          '● ' + v + ' verified  ○ ' + u + ' unverifiable  ▲ ' + m + ' missing  ✕ ' + c + ' contradicted\n' +
+          'audit your own receipts →';
+        const tweetUrl = 'https://twitter.com/intent/tweet' +
+          '?text=' + encodeURIComponent(tweetText) +
+          '&url=' + encodeURIComponent(window.location.href);
+        window.open(tweetUrl, '_blank', 'noopener,noreferrer');
+      });
+    }
+
     // Wire up copy-link button
     const copyLinkBtn = document.getElementById('copy-link-btn');
     if (copyLinkBtn) {
