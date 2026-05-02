@@ -844,6 +844,29 @@ body {
 }
 
 /* ============================================================
+   Scan notes
+   ============================================================ */
+
+.scan-notes-read {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--ink-soft);
+  line-height: 1.65;
+  margin-bottom: var(--lg);
+}
+
+.bucket-context {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--ink-faded);
+  line-height: 1.5;
+  margin-top: calc(var(--sm) * -1);
+  margin-bottom: var(--md);
+}
+
+/* ============================================================
    Scan again
    ============================================================ */
 
