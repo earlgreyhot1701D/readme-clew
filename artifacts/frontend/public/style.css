@@ -1114,6 +1114,33 @@ body {
   white-space: nowrap;
 }
 
+.try-repos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sm);
+  margin-top: var(--md);
+}
+
+.try-chip {
+  padding: 3px 10px;
+  background: transparent;
+  color: var(--blue);
+  border: 1px solid var(--blue);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.12s, background 0.12s, color 0.12s;
+}
+
+.try-chip:hover {
+  opacity: 1;
+  background: var(--blue);
+  color: var(--paper);
+}
+
 .recent-chip {
   padding: 3px 10px;
   background: transparent;
