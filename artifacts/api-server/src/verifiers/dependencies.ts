@@ -111,6 +111,7 @@ export function verifyDependencies(claims: Claim[], data: RepoData): VerifierRes
         claimText: claim.claimText,
         verbatimQuote: claim.verbatimQuote,
         evidence: `\`${pkgName}\` found in package.json`,
+        filePath: 'package.json',
       });
     } else {
       // Try partial match for scoped/aliased packages
@@ -123,6 +124,7 @@ export function verifyDependencies(claims: Claim[], data: RepoData): VerifierRes
           claimText: claim.claimText,
           verbatimQuote: claim.verbatimQuote,
           evidence: `\`${partial}\` found in package.json (matched from "${pkgName}")`,
+          filePath: 'package.json',
         });
       } else {
         result.contradicted.push({
@@ -130,6 +132,7 @@ export function verifyDependencies(claims: Claim[], data: RepoData): VerifierRes
           claimText: claim.claimText,
           verbatimQuote: claim.verbatimQuote,
           evidence: `\`${pkgName}\` not found in package.json dependencies`,
+          filePath: 'package.json',
         });
       }
     }
@@ -150,6 +153,7 @@ export function verifyDependencies(claims: Claim[], data: RepoData): VerifierRes
         claimText: `\`${dep}\` is in dependencies but not mentioned in readme`,
         verbatimQuote: dep,
         evidence: `\`${dep}\` listed in package.json dependencies but readme makes no mention of it`,
+        filePath: 'package.json',
       });
     }
   }
