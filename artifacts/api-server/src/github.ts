@@ -103,7 +103,7 @@ export async function fetchSubPackageJsons(
   repo: string,
   fileTree: string[],
 ): Promise<Record<string, unknown>[]> {
-  const pattern = /^(?:(?:packages|apps)\/[^/]+|server|frontend|client|backend|api|web)\/package\.json$/i;
+  const pattern = /^(?:(?:packages|apps|artifacts)\/[^/]+|server|frontend|client|backend|api|web)\/package\.json$/i;
   const candidates = fileTree.filter((p) => pattern.test(p));
   const results: Record<string, unknown>[] = [];
   await Promise.allSettled(
