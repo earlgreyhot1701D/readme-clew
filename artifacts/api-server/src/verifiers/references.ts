@@ -160,6 +160,7 @@ export async function verifyReferences(claims: Claim[], data: RepoData): Promise
           claimText: claim.claimText,
           verbatimQuote: claim.verbatimQuote,
           evidence: `\`${found}\` found in repo file tree`,
+          filePath: found,
         });
       } else {
         // Best candidate for the evidence message (first one tried)
