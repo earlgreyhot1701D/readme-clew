@@ -418,6 +418,32 @@
         scanThisBtn.style.display = 'none';
       }
     }
+
+    // Wire up copy-link button
+    const copyLinkBtn = document.getElementById('copy-link-btn');
+    if (copyLinkBtn) {
+      const newCopyBtn = copyLinkBtn.cloneNode(true);
+      copyLinkBtn.parentNode.replaceChild(newCopyBtn, copyLinkBtn);
+      newCopyBtn.addEventListener('click', function () {
+        const shareUrl = window.location.href;
+        const reset = function () { setText(newCopyBtn, 'copy link \u2197'); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(shareUrl).then(function () {
+            setText(newCopyBtn, 'copied!');
+            setTimeout(reset, 1500);
+          }).catch(reset);
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = shareUrl;
+          ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); setText(newCopyBtn, 'copied!'); } catch (e) {}
+          document.body.removeChild(ta);
+          setTimeout(reset, 1500);
+        }
+      });
+    }
   }
 
   // ============================================================
