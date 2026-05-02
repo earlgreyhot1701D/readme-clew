@@ -16,6 +16,7 @@
 
   /* Accent */
   --gold:         #B8872C;
+  --gold-text:    #7A5C18;   /* darker bronze — 5.4:1 on --paper, WCAG AA */
   --gold-mid:     rgba(184, 135, 44, 0.25);
   --gold-light:   rgba(184, 135, 44, 0.10);
 
@@ -440,7 +441,7 @@ body {
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: var(--gold);
+  color: var(--gold-text);
   margin-bottom: var(--md);
 }
 
@@ -483,7 +484,7 @@ body {
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: var(--gold);
+  color: var(--gold-text);
   margin-bottom: var(--lg);
 }
 
