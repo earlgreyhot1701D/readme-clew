@@ -753,6 +753,18 @@
     initScanAgain();
     renderRecentRepos();
 
+    const wordmark = document.getElementById('results-wordmark');
+    if (wordmark) {
+      wordmark.addEventListener('click', function () {
+        clearRepoParam();
+        resetMeta();
+        showState('landing');
+        const input = document.getElementById('repo-url');
+        if (input) { input.value = ''; clearInputError(); setTimeout(function () { input.focus(); }, 100); }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
     const repoParam = getRepoParam();
     if (repoParam) {
       const input = document.getElementById('repo-url');
