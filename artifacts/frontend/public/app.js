@@ -30,11 +30,57 @@
     'reading the fine print...',
     'calling claude...',
     'extracting claims...',
-    'verifying against code...',
-    'checking package.json...',
-    'scanning file tree...',
     'almost there...',
   ];
+
+  // ============================================================
+  // Verifier progress animation
+  // ============================================================
+
+  var VERIFIERS = [
+    { id: 'dependencies', doneMsg: 'package.json scanned',  checkAt:  280, doneAt: 1200 },
+    { id: 'commands',     doneMsg: 'scripts verified',       checkAt:  500, doneAt: 2100 },
+    { id: 'envvars',      doneMsg: 'source files checked',   checkAt:  720, doneAt: 2900 },
+    { id: 'references',   doneMsg: 'urls + paths checked',   checkAt:  940, doneAt: 3700 },
+    { id: 'coverage',     doneMsg: 'deps cross-referenced',  checkAt: 1160, doneAt: 4500 },
+  ];
+
+  var _vrTimers = [];
+
+  function _setVrState(id, state, symbol, status) {
+    var row = document.getElementById('vr-' + id);
+    if (!row) return;
+    row.setAttribute('data-state', state);
+    var sym = row.querySelector('.vr-symbol');
+    var sta = row.querySelector('.vr-status');
+    if (sym) sym.textContent = symbol;
+    if (sta) sta.textContent = status;
+  }
+
+  function startVerifierProgress() {
+    stopVerifierProgress();
+    for (var i = 0; i < VERIFIERS.length; i++) {
+      _setVrState(VERIFIERS[i].id, 'pending', '·', '');
+    }
+    for (var j = 0; j < VERIFIERS.length; j++) {
+      (function (v) {
+        _vrTimers.push(setTimeout(function () {
+          _setVrState(v.id, 'checking', '○', 'checking...');
+        }, v.checkAt));
+        _vrTimers.push(setTimeout(function () {
+          _setVrState(v.id, 'done', '✓', v.doneMsg);
+        }, v.doneAt));
+      })(VERIFIERS[j]);
+    }
+  }
+
+  function stopVerifierProgress() {
+    for (var i = 0; i < _vrTimers.length; i++) clearTimeout(_vrTimers[i]);
+    _vrTimers = [];
+    for (var j = 0; j < VERIFIERS.length; j++) {
+      _setVrState(VERIFIERS[j].id, 'done', '✓', VERIFIERS[j].doneMsg);
+    }
+  }
 
   let loadingInterval = null;
   let loadingIndex = 0;
@@ -47,6 +93,7 @@
       loadingIndex = (loadingIndex + 1) % LOADING_MESSAGES.length;
       if (label) label.textContent = LOADING_MESSAGES[loadingIndex];
     }, 2800);
+    startVerifierProgress();
   }
 
   function stopLoadingMessages() {
@@ -54,6 +101,7 @@
       clearInterval(loadingInterval);
       loadingInterval = null;
     }
+    stopVerifierProgress();
   }
 
   // ============================================================
