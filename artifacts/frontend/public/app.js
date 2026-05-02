@@ -384,10 +384,37 @@
       }
     }
 
+    // Scan notes read line — shown above stat bar when present
+    var notesReadEl = document.getElementById('scan-notes-read');
+    if (notesReadEl) {
+      if (data.notes && data.notes.read) {
+        setText(notesReadEl, data.notes.read);
+        notesReadEl.style.display = '';
+      } else {
+        notesReadEl.style.display = 'none';
+      }
+    }
+
     renderBucket('bucket-verified',     'items-verified',     'count-verified',     data.verified     || [], 'verified');
     renderBucket('bucket-unverifiable', 'items-unverifiable', 'count-unverifiable', data.unverifiable || [], 'unverifiable');
     renderBucket('bucket-missing',      'items-missing',      'count-missing',      data.missing      || [], 'missing');
     renderBucket('bucket-contradicted', 'items-contradicted', 'count-contradicted', data.contradicted || [], 'contradicted');
+
+    // Bucket context lines — shown under each heading when present
+    var bucketNames = ['verified', 'unverifiable', 'missing', 'contradicted'];
+    for (var bi = 0; bi < bucketNames.length; bi++) {
+      var bname = bucketNames[bi];
+      var ctxEl = document.getElementById('bucket-context-' + bname);
+      if (ctxEl) {
+        var ctx = data.notes && data.notes.bucketContext && data.notes.bucketContext[bname];
+        if (ctx) {
+          setText(ctxEl, ctx);
+          ctxEl.style.display = '';
+        } else {
+          ctxEl.style.display = 'none';
+        }
+      }
+    }
 
     // Stats bar counts
     var statIds = ['verified', 'unverifiable', 'missing', 'contradicted'];
