@@ -104,10 +104,67 @@ async function checkUrl(url: string): Promise<{ ok: boolean; status: number }> {
   }
 }
 
+// Aggregation threshold: when 3 or more file (or URL) references all verify
+// successfully, collapsing them into a single finding reduces noise significantly.
+// Repos with many file references (screenshots, assets, docs) would otherwise
+// produce a wall of identical "file found in repo file tree" rows — each is
+// technically correct but adds no new signal. Individual failures are NEVER
+// aggregated because each failure is distinct and actionable.
+const AGGREGATE_THRESHOLD = 3;
+
+type FindingShape = VerifierResult['verified'][0];
+
+function aggregateVerifiedRefs(
+  findings: FindingShape[],
+  kind: 'file' | 'url',
+): FindingShape[] {
+  if (findings.length < AGGREGATE_THRESHOLD) return findings;
+
+  const n = findings.length;
+
+  if (kind === 'file') {
+    // Extract the resolved path from each finding's evidence field
+    const paths: string[] = findings.map((f) => {
+      const m = f.evidence.match(/`([^`]+)`/);
+      return m ? m[1] : f.verbatimQuote;
+    });
+    const preview = paths
+      .slice(0, 3)
+      .map((p) => `\`${p}\``)
+      .join(', ');
+    const suffix = n > 3 ? `, and ${n - 3} more` : '';
+    return [
+      {
+        category: 'references',
+        claimText: `all ${n} file references in the readme resolve`,
+        verbatimQuote: `(${n} file references)`,
+        evidence: `${preview}${suffix} — all found in repo file tree`,
+      },
+    ];
+  } else {
+    // URL references
+    const urls = findings.map((f) => f.verbatimQuote).slice(0, 3);
+    const suffix = n > 3 ? `, and ${n - 3} more` : '';
+    return [
+      {
+        category: 'references',
+        claimText: `all ${n} url references in the readme respond 200 OK`,
+        verbatimQuote: `(${n} url references)`,
+        evidence: `${urls.join(', ')}${suffix}`,
+      },
+    ];
+  }
+}
+
 export async function verifyReferences(claims: Claim[], data: RepoData): Promise<VerifierResult> {
   const result: VerifierResult = { verified: [], unverifiable: [], missing: [], contradicted: [] };
   const refClaims = claims.filter((c) => c.category === 'references');
   const fileTreeSet = new Set(data.fileTree.map((p) => p.toLowerCase()));
+
+  // Collect verified file-ref and URL-ref findings separately so we can
+  // apply aggregation after the loop. Failures are always kept individual.
+  const pendingFileVerified: FindingShape[] = [];
+  const pendingUrlVerified: FindingShape[] = [];
 
   for (const claim of refClaims) {
     const ref = claim.verbatimQuote.trim();
@@ -115,7 +172,7 @@ export async function verifyReferences(claims: Claim[], data: RepoData): Promise
     if (isUrl(ref)) {
       const { ok, status } = await checkUrl(ref);
       if (ok) {
-        result.verified.push({
+        pendingUrlVerified.push({
           category: 'references',
           claimText: claim.claimText,
           verbatimQuote: claim.verbatimQuote,
@@ -155,7 +212,7 @@ export async function verifyReferences(claims: Claim[], data: RepoData): Promise
 
       const found = findInTree(fileCandidates, fileTreeSet);
       if (found) {
-        result.verified.push({
+        pendingFileVerified.push({
           category: 'references',
           claimText: claim.claimText,
           verbatimQuote: claim.verbatimQuote,
@@ -172,6 +229,15 @@ export async function verifyReferences(claims: Claim[], data: RepoData): Promise
         });
       }
     }
+  }
+
+  // Apply aggregation: collapse 3+ identical-pattern verified findings into one.
+  // Fewer than 3 go through as individual rows.
+  for (const f of aggregateVerifiedRefs(pendingFileVerified, 'file')) {
+    result.verified.push(f);
+  }
+  for (const f of aggregateVerifiedRefs(pendingUrlVerified, 'url')) {
+    result.verified.push(f);
   }
 
   return result;
