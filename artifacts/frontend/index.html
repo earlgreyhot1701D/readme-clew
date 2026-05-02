@@ -21,6 +21,9 @@
 <body>
   <div id="app">
 
+    <!-- Page border chrome (desktop only — hidden on mobile via CSS) -->
+    <div class="page-frame" aria-hidden="true"></div>
+
     <!-- ======= LANDING STATE ======= -->
     <div id="state-landing" class="state active">
 
@@ -133,10 +136,13 @@
           </div>
         </div>
 
-        <div class="rule"><span class="fleuron">❦</span></div>
-
         <!-- Verified -->
         <section class="bucket bucket--verified" id="bucket-verified" aria-labelledby="bucket-verified-heading">
+          <div class="bucket-sep" aria-hidden="true">
+            <span class="bucket-sep-line"></span>
+            <span class="bucket-sep-char">❦</span>
+            <span class="bucket-sep-line"></span>
+          </div>
           <h2 class="bucket-heading" id="bucket-verified-heading">
             <span class="bucket-symbol verified-symbol" aria-hidden="true">●</span>
             <span class="bucket-label verified-label">verified</span>
@@ -145,10 +151,13 @@
           <div class="bucket-items" id="items-verified"></div>
         </section>
 
-        <div class="rule"><span class="fleuron">❧</span></div>
-
         <!-- Unverifiable -->
         <section class="bucket bucket--unverifiable" id="bucket-unverifiable" aria-labelledby="bucket-unverifiable-heading">
+          <div class="bucket-sep" aria-hidden="true">
+            <span class="bucket-sep-line"></span>
+            <span class="bucket-sep-char">§</span>
+            <span class="bucket-sep-line"></span>
+          </div>
           <h2 class="bucket-heading" id="bucket-unverifiable-heading">
             <span class="bucket-symbol unverifiable-symbol" aria-hidden="true">○</span>
             <span class="bucket-label unverifiable-label">unverifiable</span>
@@ -157,10 +166,13 @@
           <div class="bucket-items" id="items-unverifiable"></div>
         </section>
 
-        <div class="rule"><span class="fleuron">❦</span></div>
-
         <!-- Missing -->
         <section class="bucket bucket--missing" id="bucket-missing" aria-labelledby="bucket-missing-heading">
+          <div class="bucket-sep" aria-hidden="true">
+            <span class="bucket-sep-line"></span>
+            <span class="bucket-sep-char">❧</span>
+            <span class="bucket-sep-line"></span>
+          </div>
           <h2 class="bucket-heading" id="bucket-missing-heading">
             <span class="bucket-symbol missing-symbol" aria-hidden="true">▲</span>
             <span class="bucket-label missing-label">missing</span>
@@ -169,10 +181,13 @@
           <div class="bucket-items" id="items-missing"></div>
         </section>
 
-        <div class="rule"><span class="fleuron">❧</span></div>
-
         <!-- Contradicted -->
         <section class="bucket bucket--contradicted" id="bucket-contradicted" aria-labelledby="bucket-contradicted-heading">
+          <div class="bucket-sep" aria-hidden="true">
+            <span class="bucket-sep-line"></span>
+            <span class="bucket-sep-char">⁂</span>
+            <span class="bucket-sep-line"></span>
+          </div>
           <h2 class="bucket-heading" id="bucket-contradicted-heading">
             <span class="bucket-symbol contradicted-symbol" aria-hidden="true">✕</span>
             <span class="bucket-label contradicted-label">contradicted</span>
@@ -180,8 +195,6 @@
           </h2>
           <div class="bucket-items" id="items-contradicted"></div>
         </section>
-
-        <div class="rule" style="margin-top:48px"><span class="fleuron">❦</span></div>
 
         <div class="scan-again-block">
           <button class="scan-again-btn" id="scan-again-btn">scan another repo ↗</button>
