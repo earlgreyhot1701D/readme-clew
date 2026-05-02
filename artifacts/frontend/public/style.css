@@ -844,6 +844,35 @@ body {
 }
 
 /* ============================================================
+   Within-bucket visual weight hierarchy
+   High-weight: dependencies + envvars (high-signal substance findings)
+   Low-weight:  references + commands  (confirmation/utility findings)
+   In contradicted bucket: all findings are high-weight.
+   ============================================================ */
+
+.finding--high-weight {
+  padding: calc(var(--md) * 1.5) 0;
+}
+
+.finding--high-weight .finding-readme-body,
+.finding--high-weight .finding-code-body {
+  font-size: 1.05rem;
+}
+
+.finding--high-weight .finding-quote-span {
+  font-weight: 500;
+}
+
+.finding--low-weight {
+  padding: calc(var(--md) * 0.75) 0;
+}
+
+.finding--low-weight .finding-readme-body,
+.finding--low-weight .finding-code-body {
+  font-size: 0.95rem;
+}
+
+/* ============================================================
    Scan notes
    ============================================================ */
 
