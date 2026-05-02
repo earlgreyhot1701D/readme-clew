@@ -85,9 +85,14 @@
     if (el) el.setAttribute(attr, value);
   }
 
-  function updateMetaForRepo(owner, repo) {
-    const title = 'readme clew — ' + owner + '/' + repo;
-    const desc = owner + '/' + repo + ' scanned by readme clew: factual claims checked against actual code. Findings only. No rewrites. Nothing saved.';
+  function updateMetaForRepo(owner, repo, v, u, m, c, readLine) {
+    const hasCounts = typeof v === 'number';
+    const title = hasCounts
+      ? owner + '/' + repo + ' — ' + v + ' verified, ' + u + ' unverifiable, ' + m + ' missing, ' + c + ' contradicted'
+      : 'readme clew — ' + owner + '/' + repo;
+    const desc = hasCounts
+      ? (readLine || (owner + '/' + repo + ' — ' + (v + u + m + c) + ' README claims checked by readme clew: ' + v + ' verified, ' + u + ' unverifiable, ' + m + ' missing, ' + c + ' contradicted.'))
+      : owner + '/' + repo + ' scanned by readme clew: factual claims checked against actual code. Findings only. No rewrites. Nothing saved.';
     const imgUrl = window.location.origin + '/cover-artwork.jpg';
     const pageUrl = window.location.href;
 
@@ -444,7 +449,14 @@
 
     const owner = (data.meta && data.meta.owner) || '';
     const repo = (data.meta && data.meta.repo) || '';
-    if (owner && repo) updateMetaForRepo(owner, repo);
+    if (owner && repo) {
+      const _v = (data.verified     || []).length;
+      const _u = (data.unverifiable || []).length;
+      const _m = (data.missing      || []).length;
+      const _c = (data.contradicted || []).length;
+      const _readLine = (data.notes && data.notes.read) || null;
+      updateMetaForRepo(owner, repo, _v, _u, _m, _c, _readLine);
+    }
 
     // Wire up "scan this repo" button
     const scanThisBtn = document.getElementById('scan-this-repo-btn');
@@ -470,8 +482,12 @@
       const newLinkedinBtn = shareLinkedinBtn.cloneNode(true);
       shareLinkedinBtn.parentNode.replaceChild(newLinkedinBtn, shareLinkedinBtn);
       newLinkedinBtn.addEventListener('click', function () {
-        const linkedinUrl = 'https://www.linkedin.com/sharing/share-offsite/?url=' +
-          encodeURIComponent(window.location.href);
+        const o = (data.meta && data.meta.owner) || '';
+        const r = (data.meta && data.meta.repo)  || '';
+        const shareUrl = (o && r)
+          ? window.location.origin + '/api/og?owner=' + encodeURIComponent(o) + '&repo=' + encodeURIComponent(r)
+          : window.location.href;
+        const linkedinUrl = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(shareUrl);
         window.open(linkedinUrl, '_blank', 'noopener,noreferrer');
       });
     }
