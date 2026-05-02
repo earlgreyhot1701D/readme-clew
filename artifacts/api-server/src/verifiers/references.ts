@@ -1,9 +1,18 @@
 import type { Claim, VerifierResult, RepoData } from './types.js';
 
 const URL_PATTERN = /^https?:\/\//i;
+const EMBEDDED_URL_RE = /https?:\/\/[^\s)"'>]+/gi;
 
 function isUrl(s: string): boolean {
   return URL_PATTERN.test(s.trim());
+}
+
+// Extract all https?:// URLs embedded anywhere in a string
+// (handles prose, git clone commands, markdown image/link syntax, etc.)
+function extractEmbeddedUrls(s: string): string[] {
+  const raw = s.match(EMBEDDED_URL_RE) || [];
+  // Strip common trailing punctuation that isn't part of the URL
+  return [...new Set(raw.map((u) => u.replace(/[.,;:!?)]+$/, '')))];
 }
 
 function normalizeFilePath(ref: string): string {
@@ -95,6 +104,7 @@ async function checkUrl(url: string): Promise<{ ok: boolean; status: number }> {
       method: 'HEAD',
       signal: controller.signal,
       headers: { 'User-Agent': 'README-Clew/1.0' },
+      redirect: 'follow',
     });
     return { ok: res.ok, status: res.status };
   } catch {
@@ -104,74 +114,131 @@ async function checkUrl(url: string): Promise<{ ok: boolean; status: number }> {
   }
 }
 
+function urlEvidence(url: string, status: number, ok: boolean): string {
+  if (ok)       return `\`${url}\` responds ${status} OK`;
+  if (status === 0) return `\`${url}\` timed out or network error`;
+  return              `\`${url}\` returned ${status}`;
+}
+
 export async function verifyReferences(claims: Claim[], data: RepoData): Promise<VerifierResult> {
   const result: VerifierResult = { verified: [], unverifiable: [], missing: [], contradicted: [] };
   const refClaims = claims.filter((c) => c.category === 'references');
   const fileTreeSet = new Set(data.fileTree.map((p) => p.toLowerCase()));
 
+  // Run all URL checks in parallel for speed
+  const urlCheckCache = new Map<string, Promise<{ ok: boolean; status: number }>>();
+  function cachedCheckUrl(url: string) {
+    if (!urlCheckCache.has(url)) urlCheckCache.set(url, checkUrl(url));
+    return urlCheckCache.get(url)!;
+  }
+
+  // Pre-flight: kick off URL checks for all claims that have URLs so they run in parallel
+  for (const claim of refClaims) {
+    const ref = claim.verbatimQuote.trim();
+    const urls = isUrl(ref) ? [ref] : extractEmbeddedUrls(ref);
+    for (const u of urls) cachedCheckUrl(u);
+  }
+
   for (const claim of refClaims) {
     const ref = claim.verbatimQuote.trim();
 
+    // ── Case 1: verbatimQuote is itself a bare URL ────────────────────────
     if (isUrl(ref)) {
-      const { ok, status } = await checkUrl(ref);
+      const { ok, status } = await cachedCheckUrl(ref);
       if (ok) {
         result.verified.push({
           category: 'references',
           claimText: claim.claimText,
           verbatimQuote: claim.verbatimQuote,
-          evidence: `url responds 200 OK`,
+          evidence: urlEvidence(ref, status, ok),
         });
       } else if (status === 0) {
         result.unverifiable.push({
           category: 'references',
           claimText: claim.claimText,
           verbatimQuote: claim.verbatimQuote,
-          evidence: 'url check timed out or network error',
+          evidence: urlEvidence(ref, status, ok),
         });
       } else {
         result.contradicted.push({
           category: 'references',
           claimText: claim.claimText,
           verbatimQuote: claim.verbatimQuote,
-          evidence: `url returned ${status}`,
+          evidence: urlEvidence(ref, status, ok),
         });
       }
-    } else {
-      // Extract candidate paths from verbatimQuote + expectedValue
-      const candidates = extractPathCandidates(ref, claim.expectedValue ?? '');
-      const fileCandidates = candidates.filter(
-        (c) => !isUrl(c) && looksLikeFilePath(c),
-      );
+      continue;
+    }
 
-      if (fileCandidates.length === 0) {
-        result.unverifiable.push({
-          category: 'references',
-          claimText: claim.claimText,
-          verbatimQuote: claim.verbatimQuote,
-          evidence: 'reference format not recognized — cannot verify',
-        });
-        continue;
-      }
+    // ── Case 2: verbatimQuote contains embedded URLs (e.g. "git clone https://…",
+    //    "![Badge](https://img.shields.io/…)", prose mentioning a live URL) ──
+    const embeddedUrls = extractEmbeddedUrls(ref);
+    if (embeddedUrls.length > 0) {
+      // Check all embedded URLs; use the first one as the primary result
+      const [primaryUrl, ...rest] = embeddedUrls;
+      const { ok, status } = await cachedCheckUrl(primaryUrl);
+      // Kick off remaining checks (already pre-flighted above, just await result)
+      await Promise.all(rest.map((u) => cachedCheckUrl(u)));
 
-      const found = findInTree(fileCandidates, fileTreeSet);
-      if (found) {
+      if (ok) {
         result.verified.push({
           category: 'references',
           claimText: claim.claimText,
           verbatimQuote: claim.verbatimQuote,
-          evidence: `\`${found}\` found in repo file tree`,
-          filePath: found,
+          evidence: urlEvidence(primaryUrl, status, ok),
+        });
+      } else if (status === 0) {
+        result.unverifiable.push({
+          category: 'references',
+          claimText: claim.claimText,
+          verbatimQuote: claim.verbatimQuote,
+          evidence: urlEvidence(primaryUrl, status, ok),
         });
       } else {
-        // Best candidate for the evidence message (first one tried)
-        const best = normalizeFilePath(fileCandidates[0]);
         result.contradicted.push({
           category: 'references',
           claimText: claim.claimText,
           verbatimQuote: claim.verbatimQuote,
-          evidence: `\`${best}\` not found in repo file tree`,
+          evidence: urlEvidence(primaryUrl, status, ok),
         });
       }
+      continue;
+    }
+
+    // ── Case 3: no URL found — try as a file path ─────────────────────────
+    const candidates = extractPathCandidates(ref, claim.expectedValue ?? '');
+    const fileCandidates = candidates.filter(
+      (c) => !isUrl(c) && looksLikeFilePath(c),
+    );
+
+    if (fileCandidates.length === 0) {
+      result.unverifiable.push({
+        category: 'references',
+        claimText: claim.claimText,
+        verbatimQuote: claim.verbatimQuote,
+        evidence: 'reference format not recognized — cannot verify',
+      });
+      continue;
+    }
+
+    const found = findInTree(fileCandidates, fileTreeSet);
+    if (found) {
+      result.verified.push({
+        category: 'references',
+        claimText: claim.claimText,
+        verbatimQuote: claim.verbatimQuote,
+        evidence: `\`${found}\` found in repo file tree`,
+        filePath: found,
+      });
+    } else {
+      // Best candidate for the evidence message (first one tried)
+      const best = normalizeFilePath(fileCandidates[0]);
+      result.contradicted.push({
+        category: 'references',
+        claimText: claim.claimText,
+        verbatimQuote: claim.verbatimQuote,
+        evidence: `\`${best}\` not found in repo file tree`,
+      });
     }
   }
 
