@@ -174,6 +174,21 @@
     catch (e) { return []; }
   }
 
+  function wireTryChips() {
+    var chips = document.querySelectorAll('.try-chip');
+    for (var i = 0; i < chips.length; i++) {
+      (function (chip) {
+        chip.addEventListener('click', function () {
+          var url = chip.getAttribute('data-repo');
+          if (!url) return;
+          var inp = document.getElementById('repo-url');
+          if (inp) inp.value = url;
+          submitScan(url);
+        });
+      })(chips[i]);
+    }
+  }
+
   function renderRecentRepos() {
     var container = document.getElementById('recent-repos');
     if (!container) return;
@@ -824,6 +839,7 @@
     showState('landing');
     initForm();
     initScanAgain();
+    wireTryChips();
     renderRecentRepos();
 
     const wordmark = document.getElementById('results-wordmark');
