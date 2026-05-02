@@ -273,6 +273,24 @@
     renderBucket('bucket-unverifiable', 'items-unverifiable', 'count-unverifiable', data.unverifiable || []);
     renderBucket('bucket-missing', 'items-missing', 'count-missing', data.missing || []);
     renderBucket('bucket-contradicted', 'items-contradicted', 'count-contradicted', data.contradicted || []);
+
+    // Wire up "scan this repo" button with the current repo URL
+    const scanThisBtn = document.getElementById('scan-this-repo-btn');
+    if (scanThisBtn) {
+      const owner = (data.meta && data.meta.owner) || '';
+      const repo = (data.meta && data.meta.repo) || '';
+      if (owner && repo) {
+        setText(scanThisBtn, 'scan ' + owner + '/' + repo + ' ↗');
+        scanThisBtn.style.display = '';
+        const newBtn = scanThisBtn.cloneNode(true);
+        scanThisBtn.parentNode.replaceChild(newBtn, scanThisBtn);
+        newBtn.addEventListener('click', function () {
+          submitScan('https://github.com/' + owner + '/' + repo);
+        });
+      } else {
+        scanThisBtn.style.display = 'none';
+      }
+    }
   }
 
   // ============================================================
