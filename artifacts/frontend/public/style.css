@@ -90,7 +90,7 @@ body {
   margin: 0 auto;
   padding: 0 var(--lg);
   position: relative;
-  background: var(--paper);
+  /* No background override — body circuit texture shows through the full page surface */
 }
 
 @media (min-width: 700px) {
@@ -230,7 +230,7 @@ body {
   padding: var(--xl) 0 var(--lg);
 }
 
-@media (min-width: 700px) {
+@media (min-width: 900px) {
   .landing-hero {
     grid-template-columns: 1fr 1fr;
     align-items: center;
@@ -239,13 +239,9 @@ body {
   }
 }
 
-.hero-lead   { order: 1; }
-.hero-artwork { order: 2; }
-
-@media (min-width: 700px) {
-  .hero-artwork { order: 1; }
-  .hero-lead    { order: 2; }
-}
+/* Artwork always above / to the left of the form at every viewport */
+.hero-artwork { order: 1; }
+.hero-lead    { order: 2; }
 
 .hero-artwork {
   display: flex;
@@ -280,7 +276,7 @@ body {
 
 .lede em { font-style: italic; }
 
-@media (min-width: 700px) {
+@media (min-width: 900px) {
   .lede { font-size: 1.3rem; }
 }
 
