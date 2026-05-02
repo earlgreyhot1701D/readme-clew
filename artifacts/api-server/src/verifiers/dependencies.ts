@@ -1,4 +1,4 @@
-import type { Claim, Finding, VerifierResult, RepoData } from './types.js';
+import type { Claim, VerifierResult, RepoData } from './types.js';
 
 function getAllPackageNames(packageJson: Record<string, unknown>): Set<string> {
   const names = new Set<string>();
@@ -19,17 +19,41 @@ function getMainDeps(packageJson: Record<string, unknown>): string[] {
   return Object.keys(deps as Record<string, unknown>);
 }
 
-function packageNameFromClaim(claim: Claim): string {
-  // Try to extract the package name from verbatimQuote or claimText
-  // The verbatim quote often IS the package name (e.g., "express")
-  // or contains it embedded in prose
-  const candidates = [claim.verbatimQuote.trim(), claim.claimText];
-  for (const candidate of candidates) {
-    // Match npm package name pattern: may include @scope/ prefix
-    const match = candidate.match(/(@?[a-zA-Z0-9._-]+\/[a-zA-Z0-9._-]+|[a-zA-Z0-9._-]+)/);
-    if (match) return match[1].toLowerCase();
+// Return the best package name to look up for this claim.
+// Strategy: build token candidates from claimText first (more specific about what
+// is being claimed), then from verbatimQuote. Use the first token that exactly
+// matches a known package — this prevents a combined quote like
+// "Express server, TypeScript" from mapping both claims to "express".
+function packageNameFromClaim(claim: Claim, allPackages: Set<string>): string {
+  const tokenize = (s: string): string[] =>
+    s
+      .split(/[\s,;:()[\]{}/\\|]+/)
+      .map((t) => t.replace(/[`'"]/g, '').toLowerCase())
+      .filter((t) => /^@?[a-z][a-z0-9._-]*$/.test(t) && t.length > 1);
+
+  const claimTokens = tokenize(claim.claimText);
+  const verbatimTokens = tokenize(claim.verbatimQuote);
+
+  // Priority 1: exact match in allPackages — claimText tokens first
+  for (const t of claimTokens) {
+    if (allPackages.has(t)) return t;
   }
-  return claim.verbatimQuote.trim().toLowerCase();
+  for (const t of verbatimTokens) {
+    if (allPackages.has(t)) return t;
+  }
+
+  // Priority 2: scoped-package match
+  const allCandidates = [...claimTokens, ...verbatimTokens];
+  for (const t of allCandidates) {
+    const scoped = [...allPackages].find((p) => p.endsWith('/' + t) || p === t);
+    if (scoped) return scoped;
+  }
+
+  // Fallback: first regex match from verbatimQuote (original behaviour)
+  const match = claim.verbatimQuote.match(
+    /(@?[a-zA-Z0-9._-]+\/[a-zA-Z0-9._-]+|[a-zA-Z0-9._-]+)/,
+  );
+  return match ? match[1].toLowerCase() : claim.verbatimQuote.trim().toLowerCase();
 }
 
 function mergeAllPackageNames(
@@ -78,7 +102,7 @@ export function verifyDependencies(claims: Claim[], data: RepoData): VerifierRes
   const claimedPackageNames = new Set<string>();
 
   for (const claim of depClaims) {
-    const pkgName = packageNameFromClaim(claim);
+    const pkgName = packageNameFromClaim(claim, allPackages);
     claimedPackageNames.add(pkgName);
 
     if (allPackages.has(pkgName)) {
