@@ -568,6 +568,12 @@
       }
     }
 
+    // Set repo context BEFORE rendering findings so view links are built correctly
+    const owner = (data.meta && data.meta.owner) || '';
+    const repo = (data.meta && data.meta.repo) || '';
+    _repoOwner = owner;
+    _repoName  = repo;
+
     renderBucket('bucket-verified',     'items-verified',     'count-verified',     data.verified     || [], 'verified');
     renderBucket('bucket-unverifiable', 'items-unverifiable', 'count-unverifiable', data.unverifiable || [], 'unverifiable');
     renderBucket('bucket-missing',      'items-missing',      'count-missing',      data.missing      || [], 'missing');
@@ -605,11 +611,6 @@
         contradictedStatEl.classList.remove('stat--zero');
       }
     }
-
-    const owner = (data.meta && data.meta.owner) || '';
-    const repo = (data.meta && data.meta.repo) || '';
-    _repoOwner = owner;
-    _repoName  = repo;
     if (owner && repo) {
       const _v = (data.verified     || []).length;
       const _u = (data.unverifiable || []).length;
