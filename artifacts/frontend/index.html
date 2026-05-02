@@ -209,15 +209,19 @@
         </section>
 
         <div class="scan-again-block">
-          <button class="scan-again-btn" id="scan-again-btn">scan another repo ↗</button>
-          <button class="scan-again-btn" id="scan-this-repo-btn" style="display:none">scan this repo ↗</button>
-          <button class="scan-again-btn" id="copy-link-btn">copy link ↗</button>
-          <button class="scan-again-btn" id="share-linkedin-btn">share on linkedin ↗</button>
-          <button class="scan-again-btn" id="share-instagram-btn">share on instagram ↗</button>
-          <button class="scan-again-btn" id="share-devto-btn">post to dev.to ↗</button>
-          <button class="scan-again-btn" id="export-json-btn">download json ↗</button>
-          <button class="scan-again-btn" id="export-md-btn">download markdown ↗</button>
-          <button class="scan-again-btn" id="print-btn">print / save as pdf ↗</button>
+          <div class="scan-actions-primary">
+            <button class="scan-again-btn" id="scan-again-btn">scan another repo ↗</button>
+            <button class="scan-again-btn" id="scan-this-repo-btn" style="display:none">scan this repo ↗</button>
+            <button class="scan-again-btn" id="copy-link-btn">copy link ↗</button>
+          </div>
+          <div class="scan-actions-secondary">
+            <button class="scan-again-btn scan-btn--secondary" id="share-linkedin-btn">linkedin ↗</button>
+            <button class="scan-again-btn scan-btn--secondary" id="share-instagram-btn">instagram ↗</button>
+            <button class="scan-again-btn scan-btn--secondary" id="share-devto-btn">dev.to ↗</button>
+            <button class="scan-again-btn scan-btn--secondary" id="export-json-btn">json ↗</button>
+            <button class="scan-again-btn scan-btn--secondary" id="export-md-btn">markdown ↗</button>
+            <button class="scan-again-btn scan-btn--secondary" id="print-btn">print / pdf ↗</button>
+          </div>
         </div>
 
         <div id="badge-section" class="badge-section" style="display:none">
