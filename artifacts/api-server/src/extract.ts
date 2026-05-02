@@ -5,7 +5,10 @@ import Anthropic from '@anthropic-ai/sdk';
 import { logger } from './lib/logger.js';
 import type { Claim } from './verifiers/types.js';
 
-const client = new Anthropic({ apiKey: process.env['ANTHROPIC_API_KEY'] });
+const client = new Anthropic({
+  apiKey: process.env['AI_INTEGRATIONS_ANTHROPIC_API_KEY'],
+  baseURL: process.env['AI_INTEGRATIONS_ANTHROPIC_BASE_URL'],
+});
 
 const SYSTEM_PROMPT = `You are README Clew's claim extractor. Your job is to read a GitHub project README and identify every factual, checkable claim it makes about its own code.
 
@@ -84,7 +87,7 @@ export async function extractClaims(
 
   try {
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-5',
+      model: 'claude-sonnet-4-6',
       max_tokens: 4096,
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: `<readme>\n${truncated}\n</readme>` }],
