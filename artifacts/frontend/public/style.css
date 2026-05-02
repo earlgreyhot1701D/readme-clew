@@ -223,9 +223,10 @@ body {
 .tagline {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.85rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--ink-faded);
+  color: var(--ink-soft);
   margin-top: 6px;
 }
 
@@ -353,6 +354,8 @@ body {
 
 .scan-form input[type="url"]::placeholder {
   color: var(--ink-faded);
+  opacity: 0.45;
+  font-style: italic;
 }
 
 .scan-form button {
