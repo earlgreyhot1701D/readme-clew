@@ -245,6 +245,23 @@
     contradicted: { symbol: '✕', verb: 'the code contradicts:' },
   };
 
+  // Within-bucket visual weight: dependencies + envvars are high-signal findings.
+  // In contradicted, everything is high-weight — a contradiction is always news.
+  function findingWeight(finding, bucket) {
+    if (bucket === 'contradicted') return 'high';
+    if (finding.category === 'dependencies' || finding.category === 'envvars') return 'high';
+    return 'low';
+  }
+
+  // Sort findings: high-weight categories first, low-weight last.
+  function sortByWeight(findings, bucket) {
+    return findings.slice().sort(function (a, b) {
+      var wa = findingWeight(a, bucket) === 'high' ? 0 : 1;
+      var wb = findingWeight(b, bucket) === 'high' ? 0 : 1;
+      return wa - wb;
+    });
+  }
+
   // Render evidence text: wrap `code` spans safely (no innerHTML with user data)
   function renderEvidenceText(container, evidenceStr) {
     const parts = evidenceStr.split(/(`[^`]*`)/g);
@@ -259,12 +276,12 @@
     }
   }
 
-  // CHANGE 3: Two-column sentence-form finding (README | divider | CODE)
+  // Two-column sentence-form finding (README | divider | CODE)
   function createFindingEl(finding, bucket) {
     const meta = BUCKET_META[bucket] || { symbol: '·', verb: 'the code:' };
 
     const row = document.createElement('div');
-    row.className = 'finding';
+    row.className = 'finding finding--' + findingWeight(finding, bucket) + '-weight';
 
     // ── README column ──────────────────────────────────────────
     const readmeCol = document.createElement('div');
@@ -349,7 +366,8 @@
       empty.textContent = 'none';
       itemsEl.appendChild(empty);
     } else {
-      for (const finding of findings) {
+      const sorted = sortByWeight(findings, bucket);
+      for (const finding of sorted) {
         itemsEl.appendChild(createFindingEl(finding, bucket));
       }
     }
