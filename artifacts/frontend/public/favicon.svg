@@ -1,3 +1,24 @@
-<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="180" height="180" rx="36" fill="#FF3C00"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Parchment background — matches --paper: #F5F0E0 -->
+  <rect width="64" height="64" fill="#F5F0E0"/>
+
+  <!-- Double gold border, matching page chrome (outer rule + inner rule) -->
+  <rect x="2" y="2" width="60" height="60" fill="none" stroke="#B8872C" stroke-width="1.5"/>
+  <rect x="5.5" y="5.5" width="53" height="53" fill="none" stroke="#B8872C" stroke-width="0.75"/>
+
+  <!-- Circuit trace on the left stem of R (rendered before text so R draws over it) -->
+  <!-- Top node: hollow circle at cap height -->
+  <circle cx="18" cy="17" r="2.5" fill="#F5F0E0" stroke="#B8872C" stroke-width="1.25"/>
+  <!-- Trace line running down the stem -->
+  <line x1="18" y1="19.5" x2="18" y2="43" stroke="#B8872C" stroke-width="1.25"/>
+  <!-- Bottom node: filled circle at base -->
+  <circle cx="18" cy="45.5" r="2.25" fill="#B8872C"/>
+
+  <!-- Bold serif R — brand navy, centered -->
+  <text x="33" y="47"
+        text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-weight="700"
+        font-size="44"
+        fill="#1A3380">R</text>
 </svg>
