@@ -606,6 +606,10 @@ body {
 .stat-contradicted .stat-symbol,
 .stat-contradicted .stat-label { color: var(--oxblood); }
 
+.stat-contradicted.stat--zero .stat-count,
+.stat-contradicted.stat--zero .stat-symbol,
+.stat-contradicted.stat--zero .stat-label { color: var(--teal); }
+
 /* ============================================================
    CHANGE 4 — Ornamented bucket separators
    Each bucket has a unique ornament character above its heading.
@@ -938,10 +942,27 @@ body {
 
 .scan-again-block {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--md);
+  padding: var(--xl) 0 var(--2xl);
+}
+
+.scan-actions-primary {
+  display: flex;
   flex-wrap: wrap;
   gap: var(--md);
   justify-content: center;
-  padding: var(--xl) 0 var(--2xl);
+}
+
+.scan-actions-secondary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sm);
+  justify-content: center;
+  padding-top: var(--sm);
+  border-top: 1px solid var(--rule);
+  width: 100%;
 }
 
 .scan-again-btn {
@@ -956,6 +977,20 @@ body {
   cursor: pointer;
   min-height: 44px;
   transition: background 0.15s, color 0.15s;
+}
+
+.scan-btn--secondary {
+  padding: 8px 16px;
+  font-size: 0.74rem;
+  min-height: 36px;
+  border-color: var(--rule-gold);
+  color: var(--ink-soft);
+}
+
+.scan-btn--secondary:hover {
+  background: var(--gold) !important;
+  border-color: var(--gold) !important;
+  color: var(--paper) !important;
 }
 
 /* ============================================================
@@ -1000,6 +1035,26 @@ body {
 .scan-again-btn:hover {
   background: var(--blue);
   color: var(--paper);
+}
+
+/* ============================================================
+   Category subheadings within buckets
+   ============================================================ */
+
+.bucket-category-subhead {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-faded);
+  padding: var(--md) 0 var(--xs);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: var(--sm);
+  margin-top: var(--lg);
+}
+
+.bucket-category-subhead:first-child {
+  margin-top: 0;
 }
 
 /* ============================================================
