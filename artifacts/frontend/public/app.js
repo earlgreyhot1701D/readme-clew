@@ -57,6 +57,26 @@
   }
 
   // ============================================================
+  // URL / deep-link helpers
+  // ============================================================
+
+  function setRepoParam(repoUrl) {
+    const url = new URL(window.location.href);
+    url.search = '?repo=' + encodeURIComponent(repoUrl);
+    history.pushState({ repo: repoUrl }, '', url.toString());
+  }
+
+  function clearRepoParam() {
+    const url = new URL(window.location.href);
+    url.search = '';
+    history.pushState({}, '', url.toString());
+  }
+
+  function getRepoParam() {
+    return new URLSearchParams(window.location.search).get('repo');
+  }
+
+  // ============================================================
   // Form handling
   // ============================================================
 
@@ -99,17 +119,20 @@
       if (!response.ok) {
         stopLoadingMessages();
         showState('landing');
+        clearRepoParam();
         showInputError(data.error || 'something went wrong. try again.');
         return;
       }
 
       stopLoadingMessages();
+      setRepoParam(repoUrl);
       renderResults(repoUrl, data);
       showState('results');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       stopLoadingMessages();
       showState('landing');
+      clearRepoParam();
       showInputError('network error — check your connection and try again.');
     }
   }
@@ -301,6 +324,7 @@
     const btn = document.getElementById('scan-again-btn');
     if (!btn) return;
     btn.addEventListener('click', function () {
+      clearRepoParam();
       showState('landing');
       const input = document.getElementById('repo-url');
       if (input) {
@@ -313,12 +337,19 @@
   }
 
   // ============================================================
-  // Init
+  // Init — check for ?repo= deep-link on load
   // ============================================================
 
   document.addEventListener('DOMContentLoaded', function () {
     showState('landing');
     initForm();
     initScanAgain();
+
+    const repoParam = getRepoParam();
+    if (repoParam) {
+      const input = document.getElementById('repo-url');
+      if (input) input.value = repoParam;
+      submitScan(repoParam);
+    }
   });
 })();
