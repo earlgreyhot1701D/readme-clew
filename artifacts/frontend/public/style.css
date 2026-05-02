@@ -222,9 +222,9 @@ body {
 
 .tagline {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.72rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.14em;
   color: var(--ink-faded);
   margin-top: 6px;
 }
@@ -768,30 +768,25 @@ body {
 
 .stat-label {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
 
-.stat-verified   .stat-count,
+.stat-verified     .stat-count { color: var(--teal); }
+.stat-unverifiable .stat-count { color: var(--slate); }
+.stat-missing      .stat-count { color: var(--amber-text); }
+.stat-contradicted .stat-count { color: var(--oxblood); }
+.stat-contradicted.stat--zero  .stat-count { color: var(--teal); }
+
 .stat-verified   .stat-symbol,
-.stat-verified   .stat-label { color: var(--teal); }
-
-.stat-unverifiable .stat-count,
+.stat-verified   .stat-label,
 .stat-unverifiable .stat-symbol,
-.stat-unverifiable .stat-label { color: var(--slate); }
-
-.stat-missing    .stat-count,
+.stat-unverifiable .stat-label,
 .stat-missing    .stat-symbol,
-.stat-missing    .stat-label { color: var(--amber-text); }
-
-.stat-contradicted .stat-count,
+.stat-missing    .stat-label,
 .stat-contradicted .stat-symbol,
-.stat-contradicted .stat-label { color: var(--oxblood); }
-
-.stat-contradicted.stat--zero .stat-count,
-.stat-contradicted.stat--zero .stat-symbol,
-.stat-contradicted.stat--zero .stat-label { color: var(--teal); }
+.stat-contradicted .stat-label { color: var(--ink-soft); }
 
 /* ============================================================
    CHANGE 4 — Ornamented bucket separators
@@ -867,7 +862,7 @@ body {
 
 .bucket-count {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   letter-spacing: 0.08em;
   color: var(--ink-faded);
   margin-left: auto;
@@ -901,9 +896,9 @@ body {
 .finding-col-label {
   display: block;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.12em;
   color: var(--ink-faded);
   margin-bottom: var(--xs);
 }
@@ -977,7 +972,7 @@ body {
 
 .finding-code-body code {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.82em;
+  font-size: 0.88em;
   background: var(--paper-warm);
   padding: 1px 5px;
   color: var(--ink);
@@ -988,9 +983,9 @@ body {
 .finding-category {
   display: block;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--ink-faded);
   text-align: right;
   margin-top: var(--xs);
@@ -1110,7 +1105,7 @@ body {
 
 .bucket-context {
   font-family: 'EB Garamond', serif;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-style: normal;
   font-weight: 400;
   color: var(--ink-soft);
@@ -1390,9 +1385,9 @@ footer {
   padding: var(--lg) 0 var(--xl);
   border-top: 1px solid var(--rule-gold);
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.12em;
   color: var(--blue);
   text-align: center;
   line-height: 1.9;
