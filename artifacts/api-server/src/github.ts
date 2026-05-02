@@ -111,7 +111,10 @@ export async function fetchSubPackageJsons(
       const content = await fetchFileContent(owner, repo, filePath);
       if (!content) return;
       try {
-        results.push(JSON.parse(content));
+        const parsed = JSON.parse(content);
+        // Store the source path so --filter path-based matching works
+        parsed['_path'] = filePath;
+        results.push(parsed);
       } catch {
         // ignore malformed package.json
       }
