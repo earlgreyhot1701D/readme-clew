@@ -77,6 +77,56 @@
   }
 
   // ============================================================
+  // Meta / OpenGraph helpers
+  // ============================================================
+
+  function setMeta(id, attr, value) {
+    const el = document.getElementById(id);
+    if (el) el.setAttribute(attr, value);
+  }
+
+  function updateMetaForRepo(owner, repo) {
+    const title = 'readme clew — ' + owner + '/' + repo;
+    const desc = owner + '/' + repo + ' scanned by readme clew: factual claims checked against actual code. Findings only. No rewrites. Nothing saved.';
+    const imgUrl = window.location.origin + '/cover-artwork.jpg';
+    const pageUrl = window.location.href;
+
+    document.title = title;
+    setMeta('og-title', 'content', title);
+    setMeta('og-description', 'content', desc);
+    setMeta('og-image', 'content', imgUrl);
+    setMeta('tw-title', 'content', title);
+    setMeta('tw-description', 'content', desc);
+    setMeta('tw-image', 'content', imgUrl);
+
+    // og:url — point at the shareable ?repo= link
+    let ogUrl = document.getElementById('og-url');
+    if (!ogUrl) {
+      ogUrl = document.createElement('meta');
+      ogUrl.setAttribute('property', 'og:url');
+      ogUrl.id = 'og-url';
+      document.head.appendChild(ogUrl);
+    }
+    ogUrl.setAttribute('content', pageUrl);
+  }
+
+  function resetMeta() {
+    const title = 'readme clew — audit your own receipts';
+    const desc = 'Paste a public GitHub repo URL. Clew extracts every factual claim your README makes and checks it against your actual code. Findings only. No rewrites. Nothing saved.';
+    const imgUrl = window.location.origin + '/cover-artwork.jpg';
+
+    document.title = title;
+    setMeta('og-title', 'content', title);
+    setMeta('og-description', 'content', desc);
+    setMeta('og-image', 'content', imgUrl);
+    setMeta('tw-title', 'content', title);
+    setMeta('tw-description', 'content', desc);
+    setMeta('tw-image', 'content', imgUrl);
+    const ogUrl = document.getElementById('og-url');
+    if (ogUrl) ogUrl.setAttribute('content', window.location.origin + '/');
+  }
+
+  // ============================================================
   // Form handling
   // ============================================================
 
@@ -297,6 +347,10 @@
     renderBucket('bucket-missing', 'items-missing', 'count-missing', data.missing || []);
     renderBucket('bucket-contradicted', 'items-contradicted', 'count-contradicted', data.contradicted || []);
 
+    const owner = (data.meta && data.meta.owner) || '';
+    const repo = (data.meta && data.meta.repo) || '';
+    if (owner && repo) updateMetaForRepo(owner, repo);
+
     // Wire up "scan this repo" button with the current repo URL
     const scanThisBtn = document.getElementById('scan-this-repo-btn');
     if (scanThisBtn) {
@@ -325,6 +379,7 @@
     if (!btn) return;
     btn.addEventListener('click', function () {
       clearRepoParam();
+      resetMeta();
       showState('landing');
       const input = document.getElementById('repo-url');
       if (input) {
