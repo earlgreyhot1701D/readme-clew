@@ -508,6 +508,19 @@ body {
    Results — top bar
    ============================================================ */
 
+.results-home-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.results-home-btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
 .results-topbar {
   display: flex;
   align-items: center;
