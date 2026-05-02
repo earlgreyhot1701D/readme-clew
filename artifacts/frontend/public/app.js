@@ -282,6 +282,10 @@
   // Render results
   // ============================================================
 
+  // Current repo context — set in renderResults, read in createFindingEl
+  var _repoOwner = '';
+  var _repoName  = '';
+
   // Safely create a text node
   function text(str) {
     return document.createTextNode(str || '');
@@ -398,6 +402,17 @@
       catTag.className = 'finding-category';
       setText(catTag, finding.category);
       codeCol.appendChild(catTag);
+    }
+
+    // Deep-link to the relevant file in GitHub
+    if (finding.filePath && _repoOwner && _repoName) {
+      const viewLink = document.createElement('a');
+      viewLink.className = 'finding-view-link';
+      viewLink.href = 'https://github.com/' + _repoOwner + '/' + _repoName + '/blob/main/' + finding.filePath;
+      viewLink.target = '_blank';
+      viewLink.rel = 'noopener noreferrer';
+      setText(viewLink, finding.filePath + ' \u2197');
+      codeCol.appendChild(viewLink);
     }
 
     row.appendChild(codeCol);
@@ -530,6 +545,8 @@
 
     const owner = (data.meta && data.meta.owner) || '';
     const repo = (data.meta && data.meta.repo) || '';
+    _repoOwner = owner;
+    _repoName  = repo;
     if (owner && repo) {
       const _v = (data.verified     || []).length;
       const _u = (data.unverifiable || []).length;
