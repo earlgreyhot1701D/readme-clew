@@ -1038,6 +1038,27 @@ body {
 }
 
 /* ============================================================
+   Finding view-in-repo link
+   ============================================================ */
+
+.finding-view-link {
+  display: inline-block;
+  margin-top: var(--sm);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--ink-faded);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule-gold);
+  letter-spacing: 0.03em;
+  transition: color 0.12s, border-color 0.12s;
+}
+
+.finding-view-link:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+/* ============================================================
    Category subheadings within buckets
    ============================================================ */
 
