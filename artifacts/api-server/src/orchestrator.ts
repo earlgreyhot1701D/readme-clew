@@ -5,6 +5,16 @@ import { verifyReferences } from './verifiers/references.js';
 import { verifyEnvvars } from './verifiers/envvars.js';
 import { verifyCoverage } from './verifiers/coverage.js';
 
+export interface ScanNotes {
+  read: string;
+  bucketContext: {
+    verified: string | null;
+    unverifiable: string | null;
+    missing: string | null;
+    contradicted: string | null;
+  };
+}
+
 export interface ScanResult {
   verified: VerifierResult['verified'];
   unverifiable: VerifierResult['unverifiable'];
@@ -17,6 +27,7 @@ export interface ScanResult {
     extractionError?: string;
     readmeTruncated?: boolean;
   };
+  notes?: ScanNotes;
 }
 
 function mergeResults(results: VerifierResult[]): Omit<ScanResult, 'meta'> {
