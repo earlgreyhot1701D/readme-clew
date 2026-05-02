@@ -449,7 +449,7 @@ body {
 
 .colophon-col p {
   font-family: 'EB Garamond', serif;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   line-height: 1.75;
   color: var(--ink-soft);
 }
@@ -714,9 +714,9 @@ body {
 
 .results-meta {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--ink-faded);
   margin-bottom: var(--lg);
 }
@@ -768,9 +768,9 @@ body {
 
 .stat-label {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
 }
 
 .stat-verified   .stat-count,
@@ -867,7 +867,7 @@ body {
 
 .bucket-count {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.75rem;
+  font-size: 0.82rem;
   letter-spacing: 0.08em;
   color: var(--ink-faded);
   margin-left: auto;
@@ -901,7 +901,7 @@ body {
 .finding-col-label {
   display: block;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   color: var(--ink-faded);
@@ -915,7 +915,7 @@ body {
 
 .finding-readme-body {
   font-family: 'EB Garamond', serif;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   line-height: 1.6;
   color: var(--ink-soft);
 }
@@ -969,7 +969,7 @@ body {
 
 .finding-code-body {
   font-family: 'EB Garamond', serif;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   line-height: 1.6;
   color: var(--ink-soft);
   flex: 1;
@@ -1274,7 +1274,7 @@ body {
 
 .bucket-category-subhead {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.75rem;
+  font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--ink-faded);
