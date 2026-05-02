@@ -464,26 +464,72 @@
       }
     }
 
-    // Wire up share on X button
-    const shareXBtn = document.getElementById('share-x-btn');
-    if (shareXBtn) {
-      const newShareBtn = shareXBtn.cloneNode(true);
-      shareXBtn.parentNode.replaceChild(newShareBtn, shareXBtn);
-      newShareBtn.addEventListener('click', function () {
+    // Wire up share on LinkedIn button
+    const shareLinkedinBtn = document.getElementById('share-linkedin-btn');
+    if (shareLinkedinBtn) {
+      const newLinkedinBtn = shareLinkedinBtn.cloneNode(true);
+      shareLinkedinBtn.parentNode.replaceChild(newLinkedinBtn, shareLinkedinBtn);
+      newLinkedinBtn.addEventListener('click', function () {
+        const linkedinUrl = 'https://www.linkedin.com/sharing/share-offsite/?url=' +
+          encodeURIComponent(window.location.href);
+        window.open(linkedinUrl, '_blank', 'noopener,noreferrer');
+      });
+    }
+
+    // Wire up share on Instagram button (Web Share API on mobile, clipboard on desktop)
+    const shareInstagramBtn = document.getElementById('share-instagram-btn');
+    if (shareInstagramBtn) {
+      const newInstagramBtn = shareInstagramBtn.cloneNode(true);
+      shareInstagramBtn.parentNode.replaceChild(newInstagramBtn, shareInstagramBtn);
+      newInstagramBtn.addEventListener('click', function () {
         const v = (data.verified     || []).length;
         const u = (data.unverifiable || []).length;
         const m = (data.missing      || []).length;
         const c = (data.contradicted || []).length;
         const o = (data.meta && data.meta.owner) || '';
         const r = (data.meta && data.meta.repo)  || '';
-        const tweetText =
+        const shareText =
           'readme clew scanned ' + o + '/' + r + ':\n' +
-          '● ' + v + ' verified  ○ ' + u + ' unverifiable  ▲ ' + m + ' missing  ✕ ' + c + ' contradicted\n' +
-          'audit your own receipts →';
-        const tweetUrl = 'https://twitter.com/intent/tweet' +
-          '?text=' + encodeURIComponent(tweetText) +
-          '&url=' + encodeURIComponent(window.location.href);
-        window.open(tweetUrl, '_blank', 'noopener,noreferrer');
+          '● ' + v + ' verified  ○ ' + u + ' unverifiable\n' +
+          '▲ ' + m + ' missing  ✕ ' + c + ' contradicted\n' +
+          'audit your own receipts → ' + window.location.href;
+        if (navigator.share) {
+          navigator.share({ text: shareText, url: window.location.href }).catch(function () {});
+        } else {
+          navigator.clipboard.writeText(shareText).then(function () {
+            setText(newInstagramBtn, 'copied!');
+            setTimeout(function () { setText(newInstagramBtn, 'share on instagram \u2197'); }, 1800);
+          }).catch(function () {});
+        }
+      });
+    }
+
+    // Wire up post to dev.to button (pre-fills new post editor)
+    const shareDevtoBtn = document.getElementById('share-devto-btn');
+    if (shareDevtoBtn) {
+      const newDevtoBtn = shareDevtoBtn.cloneNode(true);
+      shareDevtoBtn.parentNode.replaceChild(newDevtoBtn, shareDevtoBtn);
+      newDevtoBtn.addEventListener('click', function () {
+        const v = (data.verified     || []).length;
+        const u = (data.unverifiable || []).length;
+        const m = (data.missing      || []).length;
+        const c = (data.contradicted || []).length;
+        const o = (data.meta && data.meta.owner) || '';
+        const r = (data.meta && data.meta.repo)  || '';
+        const postTitle = 'I scanned ' + o + '/' + r + ' with readme clew';
+        const postBody =
+          'I ran [readme clew](' + window.location.href + ') on ' +
+          '[' + o + '/' + r + '](https://github.com/' + o + '/' + r + ')' +
+          ' to cross-check its README claims against the actual code.\n\n' +
+          '**Results:**\n\n' +
+          '- \u25cf ' + v + ' verified\n' +
+          '- \u25cb ' + u + ' unverifiable\n' +
+          '- \u25b2 ' + m + ' missing\n' +
+          '- \u2715 ' + c + ' contradicted\n\n' +
+          'Audit your own README: ' + window.location.origin;
+        const devtoUrl = 'https://dev.to/new?prefill=' + encodeURIComponent(postBody) +
+          '&title=' + encodeURIComponent(postTitle);
+        window.open(devtoUrl, '_blank', 'noopener,noreferrer');
       });
     }
 
