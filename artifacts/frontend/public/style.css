@@ -1,36 +1,46 @@
 /* ============================================================
-   README CLEW — Design tokens and layout
-   One file, one responsibility: visual system
+   README CLEW — Design system
    ============================================================ */
 
 :root {
-  /* Page surface */
-  --paper:        #F4EFD9;
-  --paper-edge:   #EDE5C8;
+  /* Surfaces */
+  --paper:        #F5F0E0;
+  --paper-warm:   #EDE5C6;
+  --paper-deep:   #E2D9B5;
+  --paper-inset:  rgba(0, 0, 0, 0.03);
 
   /* Text */
-  --ink:          #1A1A18;
-  --ink-soft:     #4A463E;
-  --ink-faded:    #7A736A;
+  --ink:          #18180F;
+  --ink-soft:     #3A3628;
+  --ink-faded:    #6B6455;
 
-  /* Rubrication accent */
-  --gold:         #C8A24B;
-  --gold-deep:    #A88438;
+  /* Accent */
+  --gold:         #B8872C;
+  --gold-mid:     rgba(184, 135, 44, 0.25);
+  --gold-light:   rgba(184, 135, 44, 0.10);
 
-  /* Brand primary */
-  --blue:         #1E3A8A;
-  --blue-deep:    #152A66;
+  /* Brand */
+  --blue:         #1A3380;
+  --blue-mid:     #2244A0;
+  --blue-deep:    #101F55;
+  --blue-ghost:   rgba(26, 51, 128, 0.06);
 
-  /* Bucket colors */
-  --teal:         #00838A;
-  --gold-bucket:  #FFB511;
-  --oxblood:      #993556;
+  /* Buckets */
+  --teal:         #00787D;
+  --teal-light:   rgba(0, 120, 125, 0.08);
+  --amber:        #C97800;
+  --amber-light:  rgba(201, 120, 0, 0.08);
+  --oxblood:      #8B1F3F;
+  --oxblood-light:rgba(139, 31, 63, 0.08);
+  --slate:        #4A5568;
+  --slate-light:  rgba(74, 85, 104, 0.06);
 
-  /* Rules */
-  --rule:         rgba(26, 26, 24, 0.18);
-  --rule-gold:    rgba(200, 162, 75, 0.45);
+  /* Strokes */
+  --rule:         rgba(24, 24, 15, 0.10);
+  --rule-gold:    rgba(184, 135, 44, 0.30);
+  --border:       rgba(24, 24, 15, 0.18);
 
-  /* Spacing scale — 8px baseline grid */
+  /* Spacing */
   --xs:  4px;
   --sm:  8px;
   --md:  16px;
@@ -53,6 +63,7 @@
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -60,37 +71,24 @@ body {
   color: var(--ink);
   font-family: 'Inter', system-ui, sans-serif;
   font-weight: 400;
-  line-height: 1.55;
-  box-shadow: inset 0 0 60px rgba(160, 130, 60, 0.08);
+  line-height: 1.6;
   min-height: 100vh;
 }
 
 /* ============================================================
-   Layout — single centered column
+   App shell
    ============================================================ */
 
 #app {
-  max-width: 760px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: var(--lg) var(--lg);
+  padding: 0 var(--lg);
 }
 
 @media (min-width: 700px) {
   #app {
-    padding: var(--2xl) var(--2xl);
+    padding: 0 var(--2xl);
   }
-}
-
-/* ============================================================
-   State machine
-   ============================================================ */
-
-.state {
-  display: none;
-}
-
-.state.active {
-  display: block;
 }
 
 /* ============================================================
@@ -99,10 +97,8 @@ body {
 
 .sr-only {
   position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
@@ -110,37 +106,22 @@ body {
 }
 
 /* ============================================================
-   Header: artwork + wordmark
+   State machine
    ============================================================ */
 
-header {
-  text-align: center;
-}
+.state { display: none; }
+.state.active { display: block; }
 
-.artwork-wrap {
-  margin-bottom: var(--xl);
-}
-
-.cover-artwork {
-  display: block;
-  margin: 0 auto;
-  width: 100%;
-  max-width: 520px;
-  min-width: 280px;
-  height: auto;
-  border: 1px solid rgba(200, 162, 75, 0.45);
-}
-
-.wordmark-block {
-  margin-bottom: var(--xl);
-}
+/* ============================================================
+   WORDMARK — shared across all states
+   ============================================================ */
 
 .wordmark {
-  font-family: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+  font-family: 'EB Garamond', Georgia, serif;
   font-weight: 800;
-  font-size: 2.75rem;
+  font-size: 3.6rem;
   color: var(--blue);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   line-height: 1;
   text-transform: lowercase;
 }
@@ -149,19 +130,201 @@ header {
   color: var(--gold);
 }
 
+.wordmark--sm {
+  font-size: 1.6rem;
+  letter-spacing: -0.01em;
+}
+
 @media (min-width: 700px) {
-  .wordmark {
-    font-size: 4rem;
-  }
+  .wordmark { font-size: 4.5rem; }
+  .wordmark--sm { font-size: 1.75rem; }
 }
 
 .tagline {
-  font-family: 'IBM Plex Mono', 'Menlo', monospace;
-  font-size: 0.72rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.22em;
   color: var(--ink-faded);
-  margin-top: var(--sm);
+  margin-top: 6px;
+}
+
+/* ============================================================
+   LANDING — two-column hero
+   ============================================================ */
+
+.landing-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--xl);
+  padding: var(--xl) 0 var(--lg);
+}
+
+@media (min-width: 700px) {
+  .landing-hero {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    min-height: 88vh;
+    gap: var(--2xl);
+    padding: var(--2xl) 0 var(--xl);
+  }
+}
+
+/* Mobile: form first, then artwork */
+.hero-lead   { order: 1; }
+.hero-artwork { order: 2; }
+
+/* Desktop: artwork left, form right */
+@media (min-width: 700px) {
+  .hero-artwork { order: 1; }
+  .hero-lead    { order: 2; }
+}
+
+/* Artwork column */
+.hero-artwork {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cover-artwork {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  border: 1px solid var(--rule-gold);
+  box-shadow: 0 8px 40px rgba(24, 24, 15, 0.12), 0 2px 8px rgba(24, 24, 15, 0.08);
+}
+
+/* Lead column */
+.hero-lead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lg);
+}
+
+.wordmark-block {
+  margin-bottom: var(--xs);
+}
+
+/* Lede */
+.lede {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.2rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  max-width: 46ch;
+}
+
+.lede em { font-style: italic; }
+
+@media (min-width: 700px) {
+  .lede { font-size: 1.3rem; }
+}
+
+/* ============================================================
+   Scan form — prominent URL input
+   ============================================================ */
+
+.scan-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sm);
+}
+
+@media (min-width: 480px) {
+  .scan-form {
+    flex-direction: row;
+    align-items: stretch;
+  }
+}
+
+.input-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1.5px solid var(--border);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.input-wrap:focus-within {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(26, 51, 128, 0.12);
+}
+
+.input-prefix {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--ink-faded);
+  padding: 0 0 0 14px;
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+}
+
+.scan-form input[type="url"] {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 14px 14px 4px;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.88rem;
+  color: var(--ink);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.scan-form input[type="url"]::placeholder {
+  color: var(--ink-faded);
+  opacity: 0.7;
+}
+
+.scan-form input[type="url"].error ~ .input-wrap,
+.input-wrap:has(input.error) {
+  border-color: var(--oxblood);
+  box-shadow: 0 0 0 3px rgba(139, 31, 63, 0.10);
+}
+
+.scan-form button {
+  padding: 0 var(--xl);
+  background: var(--blue);
+  color: var(--paper);
+  border: 1.5px solid var(--blue);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-transform: lowercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  min-height: 50px;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.scan-form button:hover {
+  background: var(--blue-mid);
+  border-color: var(--blue-mid);
+}
+
+.scan-form button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.scan-form button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.input-error {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--oxblood);
+  min-height: 1.2em;
+  letter-spacing: 0.02em;
 }
 
 /* ============================================================
@@ -186,112 +349,9 @@ header {
 
 .fleuron {
   font-family: 'EB Garamond', serif;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   color: var(--gold);
   line-height: 1;
-}
-
-/* ============================================================
-   Lede with drop cap
-   ============================================================ */
-
-.lede {
-  font-family: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
-  font-size: 1.25rem;
-  line-height: 1.55;
-  color: var(--ink);
-  max-width: 56ch;
-}
-
-.lede em {
-  font-style: italic;
-}
-
-.lede::first-letter {
-  font-family: 'EB Garamond', serif;
-  font-weight: 800;
-  color: var(--gold);
-  font-size: 5.5em;
-  line-height: 0.85;
-  float: left;
-  margin: 0.05em 0.08em 0 0;
-  padding: 0;
-}
-
-/* ============================================================
-   Scan form
-   ============================================================ */
-
-.scan-form {
-  display: flex;
-  gap: var(--sm);
-  margin: var(--xl) 0 var(--md);
-  flex-wrap: wrap;
-}
-
-.scan-form input[type="url"] {
-  flex: 1;
-  min-width: 200px;
-  padding: 14px var(--md);
-  background: var(--paper);
-  border: 1px solid var(--ink);
-  border-radius: 0;
-  font-family: 'IBM Plex Mono', 'Menlo', monospace;
-  font-size: 0.95rem;
-  color: var(--ink);
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.scan-form input[type="url"]::placeholder {
-  color: var(--ink-faded);
-}
-
-.scan-form input[type="url"]:focus {
-  outline: 2px solid var(--gold);
-  outline-offset: 2px;
-}
-
-.scan-form input[type="url"].error {
-  border-color: var(--oxblood);
-}
-
-.scan-form button {
-  padding: 14px 28px;
-  background: var(--blue);
-  color: var(--paper);
-  border: 1px solid var(--blue);
-  border-radius: 0;
-  font-family: 'IBM Plex Mono', 'Menlo', monospace;
-  font-size: 0.85rem;
-  text-transform: lowercase;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  min-height: 44px;
-  white-space: nowrap;
-}
-
-.scan-form button:hover {
-  background: var(--blue-deep);
-  border-color: var(--blue-deep);
-}
-
-.scan-form button:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 2px;
-}
-
-.scan-form button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.input-error {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.8rem;
-  color: var(--oxblood);
-  min-height: 1.2em;
-  margin-bottom: var(--sm);
 }
 
 /* ============================================================
@@ -301,24 +361,24 @@ header {
 .colophon {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--xl);
-  margin-top: var(--md);
+  gap: var(--xl) var(--2xl);
+  margin-bottom: var(--xl);
 }
 
-@media (max-width: 699px) {
+@media (max-width: 600px) {
   .colophon {
     grid-template-columns: 1fr;
-    gap: var(--lg);
+    gap: var(--xl);
   }
 }
 
 .colophon-header {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.18em;
   color: var(--gold);
-  margin-bottom: var(--lg);
+  margin-bottom: var(--md);
 }
 
 .colophon-col:last-child .colophon-header {
@@ -327,61 +387,80 @@ header {
 
 .colophon-col p {
   font-family: 'EB Garamond', serif;
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: 1.05rem;
+  line-height: 1.75;
   color: var(--ink-soft);
 }
 
 .colophon-col p + p {
-  margin-top: var(--xs);
+  margin-top: 2px;
 }
 
 /* ============================================================
-   Loading state
+   LOADING state
    ============================================================ */
 
-.loading-block {
+.loading-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  gap: var(--2xl);
   text-align: center;
-  padding: var(--3xl) 0;
+}
+
+.loading-wordmark {
+  opacity: 0.6;
+}
+
+.loading-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--md);
 }
 
 .loading-spinner {
-  width: 32px;
-  height: 32px;
-  border: 2px solid var(--rule-gold);
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--gold-mid);
   border-top-color: var(--gold);
   border-radius: 50%;
-  animation: spin 0.9s linear infinite;
-  margin: 0 auto var(--lg);
+  animation: spin 0.85s linear infinite;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 .loading-label {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.85rem;
-  text-transform: lowercase;
-  letter-spacing: 0.08em;
+  font-size: 0.88rem;
+  letter-spacing: 0.06em;
   color: var(--ink-soft);
-  margin-bottom: var(--sm);
 }
 
 .loading-sub {
   font-family: 'EB Garamond', serif;
-  font-size: 1rem;
+  font-size: 1.05rem;
   color: var(--ink-faded);
   font-style: italic;
 }
 
 /* ============================================================
-   Results meta
+   RESULTS — top bar
    ============================================================ */
+
+.results-topbar {
+  display: flex;
+  align-items: center;
+  padding: var(--lg) 0 var(--md);
+  border-bottom: 1px solid var(--rule-gold);
+  margin-bottom: var(--lg);
+}
 
 .results-meta {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--ink-faded);
@@ -394,12 +473,83 @@ header {
 }
 
 /* ============================================================
+   Stats bar
+   ============================================================ */
+
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin-bottom: var(--xl);
+  border: 1.5px solid var(--rule-gold);
+}
+
+@media (max-width: 480px) {
+  .stats-bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--lg) var(--md) var(--md);
+  gap: 4px;
+  background: var(--paper-inset);
+  text-align: center;
+}
+
+.stat-count {
+  font-family: 'EB Garamond', serif;
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.stat-symbol {
+  font-size: 0.7rem;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.stat-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.stat-verified   .stat-count { color: var(--teal); }
+.stat-verified   .stat-symbol,
+.stat-verified   .stat-label { color: var(--teal); }
+
+.stat-unverifiable .stat-count { color: var(--slate); }
+.stat-unverifiable .stat-symbol,
+.stat-unverifiable .stat-label { color: var(--slate); }
+
+.stat-missing    .stat-count { color: var(--amber); }
+.stat-missing    .stat-symbol,
+.stat-missing    .stat-label { color: var(--amber); }
+
+.stat-contradicted .stat-count { color: var(--oxblood); }
+.stat-contradicted .stat-symbol,
+.stat-contradicted .stat-label { color: var(--oxblood); }
+
+/* ============================================================
    Bucket sections
    ============================================================ */
 
 .bucket {
   margin-bottom: var(--lg);
+  border-left: 3px solid var(--rule);
+  padding-left: var(--lg);
 }
+
+.bucket--verified   { border-color: var(--teal); }
+.bucket--unverifiable { border-color: var(--slate); }
+.bucket--missing    { border-color: var(--amber); }
+.bucket--contradicted { border-color: var(--oxblood); }
 
 .bucket-heading {
   display: flex;
@@ -407,35 +557,36 @@ header {
   gap: var(--md);
   font-family: 'EB Garamond', serif;
   font-weight: 600;
-  font-size: 1.35rem;
+  font-size: 1.55rem;
   margin-bottom: var(--md);
+  line-height: 1.2;
 }
 
 .bucket-symbol {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-family: 'IBM Plex Mono', monospace;
+  flex-shrink: 0;
 }
 
-.verified-symbol   { color: var(--teal); }
-.unverifiable-symbol { color: var(--ink-soft); }
-.missing-symbol    { color: var(--gold-bucket); }
+.verified-symbol     { color: var(--teal); }
+.unverifiable-symbol { color: var(--slate); }
+.missing-symbol      { color: var(--amber); }
 .contradicted-symbol { color: var(--oxblood); }
 
-.bucket-label {
-  text-transform: lowercase;
-}
+.bucket-label { text-transform: lowercase; }
 
-.verified-label   { color: var(--teal); }
-.unverifiable-label { color: var(--ink-soft); }
-.missing-label    { color: var(--gold-bucket); }
+.verified-label     { color: var(--teal); }
+.unverifiable-label { color: var(--slate); }
+.missing-label      { color: var(--amber); }
 .contradicted-label { color: var(--oxblood); }
 
 .bucket-count {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   letter-spacing: 0.08em;
   color: var(--ink-faded);
   margin-left: auto;
+  flex-shrink: 0;
 }
 
 .bucket-empty {
@@ -447,79 +598,77 @@ header {
 }
 
 /* ============================================================
-   Finding rows — marginal-gloss layout
+   Finding rows
    ============================================================ */
 
 .finding {
   display: grid;
-  grid-template-columns: 140px 1fr;
+  grid-template-columns: 130px 1fr;
   gap: var(--lg);
   padding: var(--md) 0;
   border-bottom: 1px solid var(--rule);
 }
 
-.finding:last-child {
-  border-bottom: none;
-}
+.finding:last-child { border-bottom: none; }
 
 @media (max-width: 540px) {
   .finding {
     grid-template-columns: 1fr;
-    gap: var(--sm);
+    gap: var(--xs);
   }
 }
 
 .finding-margin {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--ink-faded);
   text-align: right;
   padding-top: 4px;
+  line-height: 1.4;
 }
 
 @media (max-width: 540px) {
-  .finding-margin {
-    text-align: left;
-  }
+  .finding-margin { text-align: left; }
 }
 
-.finding-body {
-  min-width: 0;
-}
+.finding-body { min-width: 0; }
 
 .finding-claim {
   font-family: 'EB Garamond', serif;
-  font-size: 1rem;
+  font-size: 1.05rem;
   color: var(--ink);
-  line-height: 1.5;
+  line-height: 1.55;
   margin-bottom: var(--xs);
 }
 
 .finding-quote {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   color: var(--ink-soft);
-  background: var(--paper-edge);
-  padding: 2px var(--sm);
-  border-left: 2px solid var(--rule-gold);
+  background: var(--paper-warm);
+  padding: 4px var(--sm);
+  border-left: 2px solid var(--gold);
   margin-bottom: var(--sm);
   overflow-wrap: break-word;
   word-break: break-all;
+  line-height: 1.5;
 }
 
 .finding-evidence {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   color: var(--ink-faded);
   overflow-wrap: break-word;
+  line-height: 1.55;
 }
 
 .finding-evidence code {
   font-family: inherit;
-  background: var(--paper-edge);
-  padding: 1px 4px;
+  background: var(--paper-warm);
+  padding: 1px 5px;
+  border-radius: 2px;
 }
 
 /* ============================================================
@@ -527,22 +676,25 @@ header {
    ============================================================ */
 
 .scan-again-block {
-  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--md);
+  justify-content: center;
   padding: var(--xl) 0 var(--2xl);
 }
 
 .scan-again-btn {
-  padding: 14px 32px;
+  padding: 13px 28px;
   background: transparent;
   color: var(--blue);
-  border: 1px solid var(--blue);
-  border-radius: 0;
+  border: 1.5px solid var(--blue);
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   text-transform: lowercase;
   letter-spacing: 0.05em;
   cursor: pointer;
   min-height: 44px;
+  transition: background 0.15s, color 0.15s;
 }
 
 .scan-again-btn:hover {
@@ -564,15 +716,10 @@ footer {
   padding: var(--lg) 0 var(--xl);
   border-top: 1px solid var(--rule-gold);
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   color: var(--ink-faded);
   text-align: center;
-}
-
-@media (max-width: 700px) {
-  footer {
-    line-height: 1.8;
-  }
+  line-height: 1.9;
 }
