@@ -4,6 +4,7 @@ import { fetchReadme, fetchPackageJson, fetchFileTree, fetchSourceFiles, fetchSu
 import { extractClaims } from '../extract.js';
 import { runScan } from '../orchestrator.js';
 import { generateScanNotes } from '../summarize.js';
+import { setCached } from '../scan-cache.js';
 import type { RepoData } from '../verifiers/types.js';
 
 // STUB: Private repo support (post-buildathon)
@@ -98,6 +99,7 @@ router.post('/scan', async (req, res) => {
     );
 
     const result = await Promise.race([performScan(owner, repo), timeout]);
+    setCached(owner, repo, result);
     res.json(result);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'scan failed';
