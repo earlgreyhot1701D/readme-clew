@@ -3,6 +3,7 @@ import { parseGitHubUrl } from '../validate.js';
 import { fetchReadme, fetchPackageJson, fetchFileTree, fetchSourceFiles, fetchSubPackageJsons } from '../github.js';
 import { extractClaims } from '../extract.js';
 import { runScan } from '../orchestrator.js';
+import { generateScanNotes } from '../summarize.js';
 import type { RepoData } from '../verifiers/types.js';
 
 // STUB: Private repo support (post-buildathon)
@@ -59,7 +60,10 @@ async function performScan(owner: string, repo: string): Promise<ReturnType<type
   ]);
 
   const data: RepoData = { owner, repo, readmeText, packageJson, subPackageJsons, fileTree, sourceFiles };
-  return runScan(data, extraction.claims, extraction.error, extraction.truncated);
+  const result = await runScan(data, extraction.claims, extraction.error, extraction.truncated);
+  const notes = await generateScanNotes(result);
+  if (notes !== null) result.notes = notes;
+  return result;
 }
 
 router.post('/scan', async (req, res) => {
