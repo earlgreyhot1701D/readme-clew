@@ -15,7 +15,7 @@
   <meta name="twitter:image" content="/cover-artwork.jpg" id="tw-image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
@@ -23,94 +23,120 @@
 
     <!-- ======= LANDING STATE ======= -->
     <div id="state-landing" class="state active">
-      <header>
-        <div class="artwork-wrap">
-          <img src="/cover-artwork.jpg" alt="readme clew cover art — a scholar auditing scrolls and code books" class="cover-artwork" />
+
+      <div class="landing-hero">
+
+        <div class="hero-artwork">
+          <img src="/cover-artwork.jpg" alt="readme clew — a scholar auditing scrolls and code books" class="cover-artwork" />
         </div>
 
-        <div class="wordmark-block">
-          <h1 class="wordmark">readme <span class="dot">·</span> clew</h1>
-          <p class="tagline">AUDIT YOUR OWN RECEIPTS</p>
+        <div class="hero-lead">
+          <div class="wordmark-block">
+            <h1 class="wordmark">readme <span class="dot">·</span> clew</h1>
+            <p class="tagline">AUDIT YOUR OWN RECEIPTS</p>
+          </div>
+
+          <p class="lede">Does your README tell the truth? Paste a public GitHub URL — Clew extracts every factual claim and checks it against your actual code. <em>Findings only. No rewrites. Nothing saved.</em></p>
+
+          <form class="scan-form" id="scan-form" novalidate>
+            <label for="repo-url" class="sr-only">github repository url</label>
+            <div class="input-wrap">
+              <span class="input-prefix" aria-hidden="true">github.com/</span>
+              <input
+                id="repo-url"
+                type="url"
+                placeholder="owner/repo"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="none"
+                spellcheck="false"
+              />
+            </div>
+            <button type="submit">scan <span aria-hidden="true">↗</span></button>
+          </form>
+
+          <div id="input-error" class="input-error" role="alert" aria-live="polite"></div>
         </div>
-      </header>
+
+      </div>
 
       <div class="rule"><span class="fleuron">❦</span></div>
 
-      <main>
-        <p class="lede">I always worried my own READMEs disagreed with my own repos. Paste a public GitHub URL below. Clew extracts every factual claim your README makes and checks it against your code. <em>findings only. no rewrites. no grading. nothing saved.</em></p>
-
-        <form class="scan-form" id="scan-form" novalidate>
-          <label for="repo-url" class="sr-only">github repository url</label>
-          <input
-            id="repo-url"
-            type="url"
-            placeholder="github.com/owner/repo"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="none"
-            spellcheck="false"
-          />
-          <button type="submit">scan <span aria-hidden="true">↗</span></button>
-        </form>
-
-        <div id="input-error" class="input-error" role="alert" aria-live="polite"></div>
-
-        <div class="rule"><span class="fleuron">❧</span></div>
-
-        <div class="colophon">
-          <div class="colophon-col">
-            <p class="colophon-header">❦ WHAT WE CHECK</p>
-            <p>declared dependencies — readme says you use a package, we check package.json</p>
-            <p>install and run commands — readme documents a script, we check it exists</p>
-            <p>environment variables — readme mentions an env var, we check your code reads it</p>
-            <p>file and url references — readme points to a path or link, we check it resolves</p>
-            <p>code-vs-package coverage — imports in code cross-referenced with declared deps</p>
-          </div>
-          <div class="colophon-col">
-            <p class="colophon-header">⁂ WHAT WE DON'T</p>
-            <p>private repos — public only in v1</p>
-            <p>runtime claims — "85 tests passing" requires running tests</p>
-            <p>subjective claims — "blazingly fast" is not checkable</p>
-            <p>non-JS repos — JavaScript and TypeScript only in v1</p>
-            <p>writing quality — that's your business</p>
-          </div>
+      <div class="colophon">
+        <div class="colophon-col">
+          <p class="colophon-header">❦ WHAT WE CHECK</p>
+          <p>declared dependencies — readme says you use a package, we check package.json</p>
+          <p>install and run commands — readme documents a script, we check it exists</p>
+          <p>environment variables — readme mentions an env var, we check your code reads it</p>
+          <p>file and url references — readme points to a path or link, we check it resolves</p>
+          <p>code-vs-package coverage — imports in code cross-referenced with declared deps</p>
         </div>
-      </main>
+        <div class="colophon-col">
+          <p class="colophon-header">⁂ WHAT WE DON'T</p>
+          <p>private repos — public only in v1</p>
+          <p>runtime claims — "85 tests passing" requires running tests</p>
+          <p>subjective claims — "blazingly fast" is not checkable</p>
+          <p>non-JS repos — JavaScript and TypeScript only in v1</p>
+          <p>writing quality — that's your business</p>
+        </div>
+      </div>
 
       <footer>AI ASSISTED · HUMAN APPROVED · POWERED BY NLP · BUILT FOR REPLIT BUILDATHON 2026</footer>
     </div>
 
     <!-- ======= LOADING STATE ======= -->
     <div id="state-loading" class="state">
-      <header>
-        <div class="wordmark-block" style="margin-top:64px">
-          <h1 class="wordmark">readme <span class="dot">·</span> clew</h1>
+      <div class="loading-page">
+        <div class="loading-wordmark">
+          <span class="wordmark wordmark--sm">readme <span class="dot">·</span> clew</span>
         </div>
-      </header>
-      <main>
         <div class="loading-block">
           <div class="loading-spinner" aria-hidden="true"></div>
           <p class="loading-label" id="loading-label">fetching readme...</p>
           <p class="loading-sub">extracting claims and verifying against code</p>
         </div>
-      </main>
+      </div>
       <footer>AI ASSISTED · HUMAN APPROVED · POWERED BY NLP · BUILT FOR REPLIT BUILDATHON 2026</footer>
     </div>
 
     <!-- ======= RESULTS STATE ======= -->
     <div id="state-results" class="state">
-      <header>
-        <div class="wordmark-block" style="margin-top:48px">
-          <h1 class="wordmark">readme <span class="dot">·</span> clew</h1>
-        </div>
+
+      <header class="results-topbar">
+        <span class="wordmark wordmark--sm">readme <span class="dot">·</span> clew</span>
       </header>
+
       <main>
         <div class="results-meta" id="results-meta"></div>
+
+        <!-- Stats summary bar -->
+        <div class="stats-bar">
+          <div class="stat-item stat-verified">
+            <span class="stat-count" id="stat-count-verified">—</span>
+            <span class="stat-symbol verified-symbol">●</span>
+            <span class="stat-label">verified</span>
+          </div>
+          <div class="stat-item stat-unverifiable">
+            <span class="stat-count" id="stat-count-unverifiable">—</span>
+            <span class="stat-symbol unverifiable-symbol">○</span>
+            <span class="stat-label">unverifiable</span>
+          </div>
+          <div class="stat-item stat-missing">
+            <span class="stat-count" id="stat-count-missing">—</span>
+            <span class="stat-symbol missing-symbol">▲</span>
+            <span class="stat-label">missing</span>
+          </div>
+          <div class="stat-item stat-contradicted">
+            <span class="stat-count" id="stat-count-contradicted">—</span>
+            <span class="stat-symbol contradicted-symbol">✕</span>
+            <span class="stat-label">contradicted</span>
+          </div>
+        </div>
 
         <div class="rule"><span class="fleuron">❦</span></div>
 
         <!-- Verified -->
-        <section class="bucket" id="bucket-verified" aria-labelledby="bucket-verified-heading">
+        <section class="bucket bucket--verified" id="bucket-verified" aria-labelledby="bucket-verified-heading">
           <h2 class="bucket-heading" id="bucket-verified-heading">
             <span class="bucket-symbol verified-symbol" aria-hidden="true">●</span>
             <span class="bucket-label verified-label">verified</span>
@@ -122,7 +148,7 @@
         <div class="rule"><span class="fleuron">❧</span></div>
 
         <!-- Unverifiable -->
-        <section class="bucket" id="bucket-unverifiable" aria-labelledby="bucket-unverifiable-heading">
+        <section class="bucket bucket--unverifiable" id="bucket-unverifiable" aria-labelledby="bucket-unverifiable-heading">
           <h2 class="bucket-heading" id="bucket-unverifiable-heading">
             <span class="bucket-symbol unverifiable-symbol" aria-hidden="true">○</span>
             <span class="bucket-label unverifiable-label">unverifiable</span>
@@ -134,7 +160,7 @@
         <div class="rule"><span class="fleuron">❦</span></div>
 
         <!-- Missing -->
-        <section class="bucket" id="bucket-missing" aria-labelledby="bucket-missing-heading">
+        <section class="bucket bucket--missing" id="bucket-missing" aria-labelledby="bucket-missing-heading">
           <h2 class="bucket-heading" id="bucket-missing-heading">
             <span class="bucket-symbol missing-symbol" aria-hidden="true">▲</span>
             <span class="bucket-label missing-label">missing</span>
@@ -146,7 +172,7 @@
         <div class="rule"><span class="fleuron">❧</span></div>
 
         <!-- Contradicted -->
-        <section class="bucket" id="bucket-contradicted" aria-labelledby="bucket-contradicted-heading">
+        <section class="bucket bucket--contradicted" id="bucket-contradicted" aria-labelledby="bucket-contradicted-heading">
           <h2 class="bucket-heading" id="bucket-contradicted-heading">
             <span class="bucket-symbol contradicted-symbol" aria-hidden="true">✕</span>
             <span class="bucket-label contradicted-label">contradicted</span>
@@ -162,6 +188,7 @@
           <button class="scan-again-btn" id="scan-this-repo-btn" style="display:none">scan this repo ↗</button>
         </div>
       </main>
+
       <footer>AI ASSISTED · HUMAN APPROVED · POWERED BY NLP · BUILT FOR REPLIT BUILDATHON 2026</footer>
     </div>
 
