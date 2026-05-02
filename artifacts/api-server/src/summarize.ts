@@ -2,7 +2,10 @@ import Anthropic from '@anthropic-ai/sdk';
 import { logger } from './lib/logger.js';
 import type { ScanNotes, ScanResult } from './orchestrator.js';
 
-const client = new Anthropic({ apiKey: process.env['ANTHROPIC_API_KEY'] });
+const client = new Anthropic({
+  apiKey: process.env['AI_INTEGRATIONS_ANTHROPIC_API_KEY'],
+  baseURL: process.env['AI_INTEGRATIONS_ANTHROPIC_BASE_URL'],
+});
 
 const SYSTEM_PROMPT = `You are a scan note generator for README Clew, a tool that audits GitHub READMEs against actual code. You receive structured scan results and produce plain-language synthesis.
 
@@ -70,7 +73,7 @@ export async function generateScanNotes(scanResult: ScanResult): Promise<ScanNot
 
   try {
     const callPromise = client.messages.create({
-      model: 'claude-sonnet-4-5',
+      model: 'claude-sonnet-4-6',
       max_tokens: 600,
       temperature: 0.2,
       system: SYSTEM_PROMPT,
