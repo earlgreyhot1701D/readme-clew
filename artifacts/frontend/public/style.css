@@ -457,6 +457,106 @@ body {
 }
 
 /* ============================================================
+   Example cards (landing page)
+   ============================================================ */
+
+.example-cards {
+  margin: var(--2xl) 0 var(--xl);
+}
+
+.example-cards-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  margin-bottom: var(--lg);
+}
+
+.example-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--md);
+}
+
+@media (max-width: 600px) {
+  .example-cards-grid { grid-template-columns: 1fr; }
+}
+
+.example-card {
+  background: var(--paper-inset);
+  border-left: 3px solid var(--rule);
+  padding: var(--md) var(--lg);
+  display: flex;
+  gap: var(--sm);
+  align-items: flex-start;
+}
+
+.example-card--verified     { border-left-color: var(--teal); }
+.example-card--unverifiable { border-left-color: var(--slate); }
+.example-card--missing      { border-left-color: var(--amber); }
+.example-card--contradicted { border-left-color: var(--oxblood); }
+
+.example-card-symbol {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.1rem;
+  line-height: 1.45;
+  flex-shrink: 0;
+}
+
+.example-card--verified     .example-card-symbol { color: var(--teal); }
+.example-card--unverifiable .example-card-symbol { color: var(--slate); }
+.example-card--missing      .example-card-symbol { color: var(--amber); }
+.example-card--contradicted .example-card-symbol { color: var(--oxblood); }
+
+.example-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.example-card-readme {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+
+.example-card-lead {
+  color: var(--ink-faded);
+  font-style: italic;
+}
+
+.example-card-quote {
+  color: var(--ink);
+}
+
+.example-card-code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.69rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+.example-card-code code {
+  color: var(--blue);
+  font-size: inherit;
+}
+
+.example-card-verdict {
+  color: var(--ink-faded);
+}
+
+.example-card-file {
+  display: inline-block;
+  margin-top: 5px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.64rem;
+  color: var(--ink-faded);
+  border-bottom: 1px solid var(--rule-gold);
+  letter-spacing: 0.03em;
+}
+
+/* ============================================================
    Loading state
    ============================================================ */
 
