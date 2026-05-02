@@ -72,6 +72,7 @@ export function verifyEnvvars(claims: Claim[], data: RepoData): VerifierResult {
         claimText: claim.claimText,
         verbatimQuote: claim.verbatimQuote,
         evidence: `\`process.env.${varName}\` read in \`${foundIn[0]}\``,
+        filePath: foundIn[0],
       });
     } else {
       result.unverifiable.push({
@@ -95,6 +96,7 @@ export function verifyEnvvars(claims: Claim[], data: RepoData): VerifierResult {
       claimText: `\`${varName}\` is read in code but not documented in readme`,
       verbatimQuote: varName,
       evidence: `\`process.env.${varName}\` found in \`${files[0]}\` but not mentioned in readme`,
+      filePath: files[0],
     });
   }
 
