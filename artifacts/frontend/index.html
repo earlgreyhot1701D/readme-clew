@@ -68,6 +68,47 @@
 
       </div>
 
+      <div class="example-cards">
+        <p class="example-cards-label">what a scan looks like</p>
+        <div class="example-cards-grid">
+
+          <div class="example-card example-card--verified">
+            <span class="example-card-symbol" aria-hidden="true">●</span>
+            <div class="example-card-body">
+              <p class="example-card-readme"><span class="example-card-lead">the readme claims </span><span class="example-card-quote">"uses Express for HTTP routing"</span></p>
+              <p class="example-card-code"><span class="example-card-verdict">the code confirms: </span><code>express</code> found in package.json</p>
+              <span class="example-card-file">package.json ↗</span>
+            </div>
+          </div>
+
+          <div class="example-card example-card--unverifiable">
+            <span class="example-card-symbol" aria-hidden="true">○</span>
+            <div class="example-card-body">
+              <p class="example-card-readme"><span class="example-card-lead">the readme claims </span><span class="example-card-quote">"85% test coverage"</span></p>
+              <p class="example-card-code"><span class="example-card-verdict">the code cannot confirm — </span>requires running tests to verify</p>
+            </div>
+          </div>
+
+          <div class="example-card example-card--missing">
+            <span class="example-card-symbol" aria-hidden="true">▲</span>
+            <div class="example-card-body">
+              <p class="example-card-readme"><span class="example-card-lead">the readme mentions nothing about </span><span class="example-card-quote">SESSION_SECRET</span></p>
+              <p class="example-card-code"><span class="example-card-verdict">the code does not show: </span><code>process.env.SESSION_SECRET</code> used in source but absent from readme</p>
+              <span class="example-card-file">src/index.ts ↗</span>
+            </div>
+          </div>
+
+          <div class="example-card example-card--contradicted">
+            <span class="example-card-symbol" aria-hidden="true">✕</span>
+            <div class="example-card-body">
+              <p class="example-card-readme"><span class="example-card-lead">the readme claims </span><span class="example-card-quote">"install with npm install"</span></p>
+              <p class="example-card-code"><span class="example-card-verdict">the code contradicts: </span><code>yarn.lock</code> present — no <code>package-lock.json</code> found</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       <div class="rule"><span class="fleuron">❦</span></div>
 
       <div class="colophon">
