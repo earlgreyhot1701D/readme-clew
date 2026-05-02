@@ -69,11 +69,20 @@ function findInTree(candidates: string[], fileTreeSet: Set<string>): string | nu
   for (const candidate of candidates) {
     const normalized = normalizeFilePath(candidate);
     const normLower = normalized.toLowerCase();
+
+    // Exact file match
     if (fileTreeSet.has(normLower)) return normalized;
+
+    // Partial suffix match (file in a subdirectory)
     const partial = [...fileTreeSet].find(
       (p) => p.endsWith('/' + normLower) || p === normLower,
     );
     if (partial) return partial;
+
+    // Directory match: candidate ends with '/' or matches as a directory prefix
+    const dirPrefix = normLower.endsWith('/') ? normLower : normLower + '/';
+    const dirMatch = [...fileTreeSet].find((p) => p.startsWith(dirPrefix));
+    if (dirMatch) return normalized;
   }
   return null;
 }
