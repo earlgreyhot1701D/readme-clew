@@ -508,6 +508,31 @@
       updateMetaForRepo(owner, repo, _v, _u, _m, _c, _readLine);
     }
 
+    // Badge section — populate and show
+    const badgeSec = document.getElementById('badge-section');
+    const badgeImg = document.getElementById('badge-img');
+    const badgeCodeEl = document.getElementById('badge-code');
+    if (badgeSec && badgeImg && badgeCodeEl && owner && repo) {
+      const badgeUrl = window.location.origin + '/api/badge/' + encodeURIComponent(owner) + '/' + encodeURIComponent(repo);
+      const markdown = '[![readme clew](' + badgeUrl + ')](' + window.location.href + ')';
+      badgeImg.src = badgeUrl;
+      setText(badgeCodeEl, markdown);
+      badgeSec.style.display = '';
+      const copyBadgeBtn = document.getElementById('copy-badge-btn');
+      if (copyBadgeBtn) {
+        const newCopyBadgeBtn = copyBadgeBtn.cloneNode(true);
+        copyBadgeBtn.parentNode.replaceChild(newCopyBadgeBtn, copyBadgeBtn);
+        newCopyBadgeBtn.addEventListener('click', function () {
+          navigator.clipboard.writeText(markdown).then(function () {
+            setText(newCopyBadgeBtn, 'copied!');
+            setTimeout(function () { setText(newCopyBadgeBtn, 'copy markdown \u2197'); }, 1500);
+          }).catch(function () {});
+        });
+      }
+    } else if (badgeSec) {
+      badgeSec.style.display = 'none';
+    }
+
     // Wire up "scan this repo" button
     const scanThisBtn = document.getElementById('scan-this-repo-btn');
     if (scanThisBtn) {
