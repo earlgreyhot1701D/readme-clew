@@ -12,6 +12,7 @@ export interface Finding {
   claimText: string;
   verbatimQuote: string;
   evidence: string;
+  filePath?: string;
 }
 
 export interface VerifierResult {
