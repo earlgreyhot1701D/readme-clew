@@ -116,6 +116,9 @@
       <main>
         <div class="results-meta" id="results-meta"></div>
 
+        <!-- Scan notes read line — populated by app.js when notes are present -->
+        <p class="scan-notes-read" id="scan-notes-read" style="display:none"></p>
+
         <!-- Stats summary bar -->
         <div class="stats-bar">
           <div class="stat-item stat-verified">
@@ -152,6 +155,7 @@
             <span class="bucket-label verified-label">verified</span>
             <span class="bucket-count" id="count-verified"></span>
           </h2>
+          <p class="bucket-context" id="bucket-context-verified" style="display:none"></p>
           <div class="bucket-items" id="items-verified"></div>
         </section>
 
@@ -167,6 +171,7 @@
             <span class="bucket-label unverifiable-label">unverifiable</span>
             <span class="bucket-count" id="count-unverifiable"></span>
           </h2>
+          <p class="bucket-context" id="bucket-context-unverifiable" style="display:none"></p>
           <div class="bucket-items" id="items-unverifiable"></div>
         </section>
 
@@ -182,6 +187,7 @@
             <span class="bucket-label missing-label">missing</span>
             <span class="bucket-count" id="count-missing"></span>
           </h2>
+          <p class="bucket-context" id="bucket-context-missing" style="display:none"></p>
           <div class="bucket-items" id="items-missing"></div>
         </section>
 
@@ -197,6 +203,7 @@
             <span class="bucket-label contradicted-label">contradicted</span>
             <span class="bucket-count" id="count-contradicted"></span>
           </h2>
+          <p class="bucket-context" id="bucket-context-contradicted" style="display:none"></p>
           <div class="bucket-items" id="items-contradicted"></div>
         </section>
 
