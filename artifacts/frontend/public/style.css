@@ -104,7 +104,7 @@ body {
 @media (min-width: 1128px) {
   #app {
     margin: 12px auto;
-    max-width: 1080px;
+    max-width: 1440px;
   }
 }
 
@@ -439,7 +439,22 @@ body {
   color: var(--ink-soft);
 }
 
-.colophon-col p + p { margin-top: 2px; }
+/* Bullet items — every <p> that isn't the header gets a gold mid-dot */
+.colophon-col p:not(.colophon-header) {
+  padding-left: 1.2em;
+  position: relative;
+  margin-top: 8px;
+}
+
+.colophon-col p:not(.colophon-header)::before {
+  content: '·';
+  position: absolute;
+  left: 0.1em;
+  top: 0;
+  color: var(--gold);
+  font-size: 1.1em;
+  line-height: 1.75;
+}
 
 /* ============================================================
    Loading state
