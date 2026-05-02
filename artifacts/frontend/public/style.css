@@ -29,6 +29,7 @@
   --teal:         #00787D;
   --teal-light:   rgba(0, 120, 125, 0.08);
   --amber:        #C97800;
+  --amber-text:   #8B5500;   /* 5.3:1 on --paper, WCAG AA */
   --amber-light:  rgba(201, 120, 0, 0.08);
   --oxblood:      #8B1F3F;
   --oxblood-light:rgba(139, 31, 63, 0.08);
@@ -352,7 +353,6 @@ body {
 
 .scan-form input[type="url"]::placeholder {
   color: var(--ink-faded);
-  opacity: 0.7;
 }
 
 .scan-form button {
@@ -654,7 +654,7 @@ body {
 .vr-status {
   font-size: 0.72rem;
   font-style: italic;
-  opacity: 0.7;
+  color: var(--ink-faded);
   white-space: nowrap;
 }
 
@@ -682,7 +682,7 @@ body {
 }
 
 .verifier-row[data-verifier="dependencies"][data-state="done"] { color: var(--teal); }
-.verifier-row[data-verifier="commands"][data-state="done"]     { color: var(--amber); }
+.verifier-row[data-verifier="commands"][data-state="done"]     { color: var(--amber-text); }
 .verifier-row[data-verifier="envvars"][data-state="done"]      { color: var(--blue); }
 .verifier-row[data-verifier="references"][data-state="done"]   { color: var(--slate); }
 .verifier-row[data-verifier="coverage"][data-state="done"]     { color: var(--gold); }
@@ -783,7 +783,7 @@ body {
 
 .stat-missing    .stat-count,
 .stat-missing    .stat-symbol,
-.stat-missing    .stat-label { color: var(--amber); }
+.stat-missing    .stat-label { color: var(--amber-text); }
 
 .stat-contradicted .stat-count,
 .stat-contradicted .stat-symbol,
@@ -855,14 +855,14 @@ body {
 
 .verified-symbol     { color: var(--teal); }
 .unverifiable-symbol { color: var(--slate); }
-.missing-symbol      { color: var(--amber); }
+.missing-symbol      { color: var(--amber-text); }
 .contradicted-symbol { color: var(--oxblood); }
 
 .bucket-label { text-transform: lowercase; }
 
 .verified-label     { color: var(--teal); }
 .unverifiable-label { color: var(--slate); }
-.missing-label      { color: var(--amber); }
+.missing-label      { color: var(--amber-text); }
 .contradicted-label { color: var(--oxblood); }
 
 .bucket-count {
@@ -1190,7 +1190,7 @@ body {
 
 .recent-label {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--ink-faded);
@@ -1209,37 +1209,45 @@ body {
   padding: 3px 10px;
   background: transparent;
   color: var(--blue);
-  border: 1px solid var(--blue);
+  border: 1.5px solid var(--blue);
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   letter-spacing: 0.02em;
   cursor: pointer;
-  opacity: 0.7;
-  transition: opacity 0.12s, background 0.12s, color 0.12s;
+  transition: background 0.12s, color 0.12s;
 }
 
 .try-chip:hover {
-  opacity: 1;
   background: var(--blue);
   color: var(--paper);
+}
+
+.try-chip:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
 }
 
 .recent-chip {
   padding: 3px 10px;
   background: transparent;
   color: var(--ink-soft);
-  border: 1px solid var(--rule-gold);
+  border: 1.5px solid var(--gold-text);
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   letter-spacing: 0.02em;
   cursor: pointer;
   transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
 
 .recent-chip:hover {
-  background: var(--gold);
+  background: var(--gold-text);
   color: var(--paper);
-  border-color: var(--gold);
+  border-color: var(--gold-text);
+}
+
+.recent-chip:focus-visible {
+  outline: 2px solid var(--gold-text);
+  outline-offset: 2px;
 }
 
 .scan-again-btn:hover {
