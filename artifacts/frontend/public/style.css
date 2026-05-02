@@ -604,6 +604,74 @@ body {
   font-style: italic;
 }
 
+.verifier-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: var(--lg);
+  width: 260px;
+  text-align: left;
+}
+
+.verifier-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-faded);
+  transition: color 0.35s ease;
+}
+
+.vr-symbol {
+  width: 1ch;
+  flex-shrink: 0;
+  text-align: center;
+  transition: color 0.35s ease;
+}
+
+.vr-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.vr-status {
+  font-size: 0.64rem;
+  font-style: italic;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+/* pending — barely visible */
+.verifier-row[data-state="pending"] {
+  opacity: 0.3;
+}
+
+/* checking — pulsing */
+.verifier-row[data-state="checking"] {
+  opacity: 1;
+  color: var(--ink-soft);
+  animation: vr-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes vr-pulse {
+  0%, 100% { opacity: 0.45; }
+  50%       { opacity: 1; }
+}
+
+/* done — full colour per verifier, no pulse */
+.verifier-row[data-state="done"] {
+  opacity: 1;
+  animation: none;
+}
+
+.verifier-row[data-verifier="dependencies"][data-state="done"] { color: var(--teal); }
+.verifier-row[data-verifier="commands"][data-state="done"]     { color: var(--amber); }
+.verifier-row[data-verifier="envvars"][data-state="done"]      { color: var(--blue); }
+.verifier-row[data-verifier="references"][data-state="done"]   { color: var(--slate); }
+.verifier-row[data-verifier="coverage"][data-state="done"]     { color: var(--gold); }
+
 /* ============================================================
    Results — top bar
    ============================================================ */
