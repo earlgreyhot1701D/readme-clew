@@ -945,9 +945,82 @@ body {
   transition: background 0.15s, color 0.15s;
 }
 
+/* ============================================================
+   Recent repos
+   ============================================================ */
+
+.recent-repos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sm);
+  margin-top: var(--md);
+}
+
+.recent-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-faded);
+  white-space: nowrap;
+}
+
+.recent-chip {
+  padding: 3px 10px;
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--rule-gold);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+
+.recent-chip:hover {
+  background: var(--gold);
+  color: var(--paper);
+  border-color: var(--gold);
+}
+
 .scan-again-btn:hover {
   background: var(--blue);
   color: var(--paper);
+}
+
+/* ============================================================
+   Print / Save as PDF
+   ============================================================ */
+
+@media print {
+  .scan-again-block,
+  .recent-repos,
+  #state-landing,
+  #state-loading,
+  #state-results footer { display: none !important; }
+
+  body,
+  .page-wrap,
+  .state,
+  .state.active {
+    background: #fff !important;
+    background-image: none !important;
+  }
+
+  .stats-bar {
+    border-top: 1px solid #bbb !important;
+    border-bottom: 1px solid #bbb !important;
+  }
+
+  .stat-item { background: transparent !important; }
+
+  .bucket { break-inside: avoid; page-break-inside: avoid; }
+  .finding { break-inside: avoid; page-break-inside: avoid; }
+
+  .scan-notes-read::first-letter { font-size: 2em; }
+
+  * { transition: none !important; animation: none !important; }
 }
 
 .scan-again-btn:focus-visible {
