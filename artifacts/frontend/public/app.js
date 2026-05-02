@@ -405,25 +405,47 @@
   }
 
   function renderBucket(bucketId, itemsId, countId, findings, bucket) {
-    const countEl = document.getElementById(countId);
-    const itemsEl = document.getElementById(itemsId);
+    const sectionEl = document.getElementById(bucketId);
+    const countEl   = document.getElementById(countId);
+    const itemsEl   = document.getElementById(itemsId);
 
     if (!itemsEl) return;
 
     const count = findings ? findings.length : 0;
+
+    // Hide the entire section when empty — stat bar already shows the count
+    if (sectionEl) sectionEl.style.display = count === 0 ? 'none' : '';
+
     if (countEl) setText(countEl, count + ' finding' + (count !== 1 ? 's' : ''));
 
-    itemsEl.innerHTML = ''; // safe — no user data here, just clearing
+    itemsEl.innerHTML = '';
 
-    if (count === 0) {
-      const empty = document.createElement('p');
-      empty.className = 'bucket-empty';
-      empty.textContent = 'none';
-      itemsEl.appendChild(empty);
+    if (count === 0) return;
+
+    // Group by category when multiple categories and >= 4 items total
+    const sorted = sortByWeight(findings, bucket);
+    var cats = {};
+    var catOrder = [];
+    for (var fi = 0; fi < sorted.length; fi++) {
+      var cat = sorted[fi].category || 'other';
+      if (!cats[cat]) { cats[cat] = []; catOrder.push(cat); }
+      cats[cat].push(sorted[fi]);
+    }
+
+    if (catOrder.length > 1 && count >= 4) {
+      for (var ci = 0; ci < catOrder.length; ci++) {
+        var cname = catOrder[ci];
+        var subhead = document.createElement('p');
+        subhead.className = 'bucket-category-subhead';
+        setText(subhead, cname + ' \u00b7 ' + cats[cname].length);
+        itemsEl.appendChild(subhead);
+        for (var fi2 = 0; fi2 < cats[cname].length; fi2++) {
+          itemsEl.appendChild(createFindingEl(cats[cname][fi2], bucket));
+        }
+      }
     } else {
-      const sorted = sortByWeight(findings, bucket);
-      for (const finding of sorted) {
-        itemsEl.appendChild(createFindingEl(finding, bucket));
+      for (var fi3 = 0; fi3 < sorted.length; fi3++) {
+        itemsEl.appendChild(createFindingEl(sorted[fi3], bucket));
       }
     }
   }
@@ -489,12 +511,21 @@
       }
     }
 
-    // Stats bar counts
+    // Stats bar counts + contradicted colour flip when zero
     var statIds = ['verified', 'unverifiable', 'missing', 'contradicted'];
     for (var i = 0; i < statIds.length; i++) {
       var sid = statIds[i];
       var countEl = document.getElementById('stat-count-' + sid);
       if (countEl) setText(countEl, String((data[sid] || []).length));
+    }
+    var contradictedStatEl = document.querySelector('.stat-contradicted');
+    if (contradictedStatEl) {
+      var cCount = (data.contradicted || []).length;
+      if (cCount === 0) {
+        contradictedStatEl.classList.add('stat--zero');
+      } else {
+        contradictedStatEl.classList.remove('stat--zero');
+      }
     }
 
     const owner = (data.meta && data.meta.owner) || '';
