@@ -1,0 +1,8 @@
+{
+  "claims": [
+    {"category": "commands", "claimText": "npm install", "verbatimQuote": "npm install", "expectedValue": "install runs"},
+    {"category": "commands", "claimText": "npm start", "verbatimQuote": "npm start", "expectedValue": "start script in package.json"},
+    {"category": "dependencies", "claimText": "uses express", "verbatimQuote": "express", "expectedValue": "express in package.json"},
+    {"category": "dependencies", "claimText": "uses nedb", "verbatimQuote": "nedb", "expectedValue": "nedb in package.json"}
+  ]
+}
