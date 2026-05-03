@@ -16,7 +16,7 @@ import type { RepoData } from '../verifiers/types.js';
 
 const router = Router();
 
-const SCAN_TIMEOUT_MS = 30_000;
+const SCAN_TIMEOUT_MS = 60_000;
 
 // Simple in-memory rate limiter: 10 scans per hour per IP
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -95,7 +95,7 @@ router.post('/scan', async (req, res) => {
 
   try {
     const timeout = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error('scan timed out after 30 seconds')), SCAN_TIMEOUT_MS),
+      setTimeout(() => reject(new Error('scan timed out after 60 seconds')), SCAN_TIMEOUT_MS),
     );
 
     const result = await Promise.race([performScan(owner, repo), timeout]);
