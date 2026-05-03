@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://readme-clew--earlgreyhot.replit.app/sitemap.xml
