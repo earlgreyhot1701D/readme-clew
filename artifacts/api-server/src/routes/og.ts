@@ -3,6 +3,33 @@ import { getCached } from '../scan-cache.js';
 
 const router = Router();
 
+// Rate limiter — same pattern and limit as badge (300/hr/IP)
+const ogRateLimit = new Map<string, { count: number; resetAt: number }>();
+const OG_LIMIT = 300;
+const OG_WINDOW_MS = 3_600_000;
+
+function checkOgRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = ogRateLimit.get(ip);
+  if (!entry || entry.resetAt < now) {
+    ogRateLimit.set(ip, { count: 1, resetAt: now + OG_WINDOW_MS });
+    return true;
+  }
+  if (entry.count >= OG_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
+setInterval(
+  () => {
+    const now = Date.now();
+    for (const [ip, entry] of ogRateLimit) {
+      if (entry.resetAt < now) ogRateLimit.delete(ip);
+    }
+  },
+  10 * 60 * 1000,
+);
+
 function esc(s: string): string {
   return s
     .replace(/&/g, '&amp;')
@@ -12,6 +39,14 @@ function esc(s: string): string {
 }
 
 router.get('/og', (req, res) => {
+  const ip =
+    (req.headers['x-forwarded-for'] as string)?.split(',')[0].trim() ?? req.ip ?? 'unknown';
+
+  if (!checkOgRateLimit(ip)) {
+    res.status(429).send('rate limited');
+    return;
+  }
+
   const owner = typeof req.query.owner === 'string' ? req.query.owner.trim() : '';
   const repo  = typeof req.query.repo  === 'string' ? req.query.repo.trim()  : '';
 
