@@ -1,0 +1,21 @@
+{
+  "name": "readme clew",
+  "short_name": "readme clew",
+  "description": "audit your own receipts",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F0E0",
+  "theme_color": "#1A3380",
+  "icons": [
+    {
+      "src": "/favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-r.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
