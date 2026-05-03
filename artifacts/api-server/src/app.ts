@@ -1,5 +1,6 @@
 import express, { type Express } from "express";
 import cors from "cors";
+import helmet from "helmet";
 import path from "path";
 import pinoHttp from "pino-http";
 import router from "./routes/index.js";
@@ -26,9 +27,27 @@ app.use(
     },
   }),
 );
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:", "https://github.com", "https://raw.githubusercontent.com"],
+        connectSrc: ["'self'"],
+        frameAncestors: ["'self'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+      },
+    },
+    crossOriginEmbedderPolicy: false,
+  }),
+);
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '4kb' }));
+app.use(express.urlencoded({ extended: true, limit: '4kb' }));
 
 // API routes
 app.use("/api", router);
